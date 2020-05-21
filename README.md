@@ -1,9 +1,9 @@
-### mkdir project_folder
+### C:\test\test> mkdir project_folder
 
-### cd project_folder
+### C:\test\test> cd project_folder
 
-### git clone https://gitlab.com/tabacalera/thesis
+### C:\test\test> git clone https://gitlab.com/tabacalera/thesis
 
-### npm install
+### C:\test\test> npm install
 
-### npm run start
+### C:\test\test> npm run start
