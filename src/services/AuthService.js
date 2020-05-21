@@ -2,7 +2,7 @@ import decode from 'jwt-decode'
 import axios from 'axios'
 class AuthService {
     // Initializing important variables
-    domain = 'http://192.168.1.9:8000/api' // API server domain
+    domain = 'https://shielded-fjord-98167.herokuapp.com/api' // API server domain
     
 
     login (username, password){
