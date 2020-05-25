@@ -31,7 +31,7 @@ const HomePage = (props) => {
           return
         }
         setLoading(false)
-        props.history.push('/sessions/current', response.data.results[0])
+        // props.history.push('/sessions/current', response.data.results[0])
       })
       .catch(err=>{
         setLoading(false)

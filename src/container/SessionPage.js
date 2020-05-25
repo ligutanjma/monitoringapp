@@ -12,12 +12,6 @@ import Spinner from 'react-bootstrap/Spinner'
 
 const { SearchBar } = Search;
 
-const rowEvents = {
-  onDoubleClick: (e, row, rowIndex) => {
-    return <Redirect to="/sessions/current" />
-  }
-};
-
 const columns = [{
   dataField: 'pk',
   text: 'Session ID',
@@ -43,6 +37,7 @@ const SessionList = (props) => {
     console.log(props)
     return ( 
       <Container>
+      <br/>
         <ToolkitProvider
           keyField="pk"
           data={ props.sessions }
@@ -50,31 +45,31 @@ const SessionList = (props) => {
           search
         >
           { table_props => (
-            
-              <Col>
+            <Row>
+              <Col sm="2">
+                <Link to="/sessions/create">
+                              <button type="button">
+                                  Click Click Click
+                              </button>
+                </Link>
+              </Col>
+              <Col sm="10">
                   <Row>
-                      <Col>
-                        <SearchBar { ...table_props.searchProps } />
-                        
-                      </Col>
-                      <Col>
-                      <Link to="/sessions/create">
-                            <button type="button">
-                                Click Click Click
-                            </button>
-                        </Link>
-                      </Col>
-                  </Row>
-                  <BootstrapTable 
-                    rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                      console.log(row)
-                      props.prop.history.push('/sessions/current', row)
+                    <Col>
+                      <SearchBar { ...table_props.searchProps } />
+                    </Col>
+                    <Col>
                       
+                    </Col>
+                  </Row>
+                  <BootstrapTable
+                    rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
+                    props.prop.history.push('/sessions/current', row)
                     }}}
                     {...table_props.baseProps}>
-
                   </BootstrapTable>
               </Col>
+            </Row>
             )
           }
         </ToolkitProvider>
@@ -100,12 +95,8 @@ export const AddSessions = (props) => {
       "operator": operator,
       "required_temp": required_temp,
       "holding_time": holding_time,
-      // "current": true,
-      // "started":false,
-      // "ended": false
       
     };
-    console.log(authTokens)
     var options = {
       headers: {
         'Content-Type': 'application/json',
@@ -114,12 +105,9 @@ export const AddSessions = (props) => {
     }
     SessionDataService.create(JSON.stringify(data), options)
       .then(response => {
-        console.log(response);
         // props.history.push('/sessions/current', response.data)
-        console.log("pushed")
         props.history.push('/')
       })
-
       .catch(e => {
         console.log(e);
       });
@@ -172,66 +160,4 @@ export const SessionPage = (props)=>{
       <SessionList sessions= {sessions} prop={props}/>
     
   
-}
-export class SessionPages extends Component {
-        
-    constructor(props) {
-        super(props);
-        this.state = { 
-            sessions: [],
-            currentSession: null,
-            currentIndex: -1,
-        }
-    }
-    componentDidMount() {
-        this.retrieveSessions()
-    }
-    retrieveSessions =()=> {
-        SessionDataService.getAll()
-          .then(response => {
-            this.setState({
-                sessions: response.data.results
-            });
-            console.log(response);
-          })
-          .catch(e => {
-            console.log(e);
-          });
-      }
-    render() { 
-        return ( 
-            <div>
-                
-
-                <SessionList 
-                    render= {() => 
-                        <Link to="/sessions/create">
-                            <button type="button">
-                                Click Click Click
-                            </button>
-                        </Link>} 
-                    sessions= {this.state.sessions} />
-            </div>
-         );
-    }
-}
-export class CreateSessionPage extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-        
-        }
-    }
-    
-    
-    render() { 
-        return ( 
-            <div>
-                
-
-                Hello World
-            </div>
-         );
-    }
 }
