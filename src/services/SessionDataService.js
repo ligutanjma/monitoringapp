@@ -9,32 +9,59 @@ class SessionDataService {
       cancel = c;
     })
   }
+    // getCurrent(headers) {
+    //   return axios.get(`http://${URL}:8000/api/sessions/current/`, headers);
+    // }
+    // getStarted(headers) {
+    //   return axios.get(`http://${URL}:8000/api/sessions/started/`, headers);
+
+    // }
+
+    // getAll(headers) {
+    //   return axios.get(`http://${URL}:8000/api/sessions/`, headers);
+    // }
+  
+    // get(id) {
+    //   return axios.get(`http://${URL}:8000/api/sessions/${id}`);
+    // }
+  
+    // create(data, headers) {
+    //   return axios.post(`http://${URL}:8000/api/sessions/`, data, headers);
+    // }
+  
+    // update(id, data, headers) {
+    //   return axios.put(`http://${URL}:8000/api/sessions/${id}/`, data, headers);
+    // }
+  
+    // delete(id) {
+    //   return axios.delete(`http://${URL}:8000/api/sessions/${id}/`);
+    // }
     getCurrent(headers) {
-      return axios.get(`http://${URL}api/sessions/current/`, headers);
+      return axios.get(`${URL}api/sessions/current/`, headers);
     }
     getStarted(headers) {
-      return axios.get(`http://${URL}api/sessions/started/`, headers);
+      return axios.get(`${URL}api/sessions/started/`, headers);
 
     }
 
     getAll(headers) {
-      return axios.get(`http://${URL}api/sessions/`, headers);
+      return axios.get(`${URL}api/sessions/`, headers);
     }
   
     get(id) {
-      return axios.get(`http://${URL}api/sessions/${id}`);
+      return axios.get(`${URL}api/sessions/${id}`);
     }
   
     create(data, headers) {
-      return axios.post(`http://${URL}api/sessions/`, data, headers);
+      return axios.post(`${URL}api/sessions/`, data, headers);
     }
   
     update(id, data, headers) {
-      return axios.put(`http://${URL}api/sessions/${id}/`, data, headers);
+      return axios.put(`${URL}api/sessions/${id}/`, data, headers);
     }
   
     delete(id) {
-      return axios.delete(`http://${URL}api/sessions/${id}/`);
+      return axios.delete(`${URL}api/sessions/${id}/`);
     }
     
     // deleteAll() {

@@ -20,7 +20,7 @@ const CurrentSessions = (props) => {
     const [modalInputName, setModalInputName] = React.useState('')
     const [isSlicedReadings, setIsSlicedReadings] = React.useState(false)
     const [renderedSlicedReadingsToGraph, setRenderedSlicedReadingsToGraph] = React.useState(false)
-    const URL = "ws://192.168.1.9:8000/"
+    const URL = "ws://127.0.0.1:8000/"
     const { authTokens } = useAuth()
    
     
@@ -64,7 +64,7 @@ const CurrentSessions = (props) => {
             };
         }
         else {
-        const websocket = new WebSocket("ws://192.168.1.9:8000/ws/clients/");
+        const websocket = new WebSocket(`${URL}ws/clients/`);
         websocket.onopen = () => {
             if(props.location.state.started === true && renderedSlicedReadingsToGraph === false){
                 var message = {

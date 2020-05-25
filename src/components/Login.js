@@ -14,9 +14,7 @@ const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { setAuthTokens } = useAuth()
-  const referer = props.location.state.referer || '/'
   
-
   function postLogin() {
     setLoading(true)
     AuthService.login(username, password)
@@ -24,7 +22,7 @@ const Login = (props) => {
       setLoading(false);
       setLoggedIn(true);
       setAuthTokens(res.data.token); // Setting the token in localStorage
-      
+      props.history.push('/')
 
     })
     .catch(err=>{
@@ -36,11 +34,7 @@ const Login = (props) => {
     
   }
   
-  if (AuthService.loggedIn()) {
-    console.log(props.location)
-    
-    return <Redirect to={referer} />;
-  }
+
   if(loading){
     return (
       <Spinner animation="border" role="status">
