@@ -1,7 +1,7 @@
 import axios from 'axios';
 const CancelToken = axios.CancelToken
 let cancel;
-const URL = 'https://shielded-fjord-98167.herokuapp.com'
+const URL = 'https://shielded-fjord-98167.herokuapp.com/'
 class SessionDataService {
     state = {
       cancelToken: new CancelToken(function executor(c) {
@@ -37,14 +37,22 @@ class SessionDataService {
     //   return axios.delete(`http://${URL}:8000/api/sessions/${id}/`);
     // }
     getCurrent(headers) {
+<<<<<<< HEAD
       return axios.get(`${URL}/api/sessions/current/`, headers);
     }
     getStarted(headers) {
       return axios.get(`${URL}/api/sessions/started/`, headers);
+=======
+      return axios.get(`${URL}api/sessions/current/`, headers);
+    }
+    getStarted(headers) {
+      return axios.get(`${URL}api/sessions/started/`, headers);
+>>>>>>> 4c4b8469dc83b578417ad4eabdaa2fb9e8c85a4b
 
     }
 
     getAll(headers) {
+<<<<<<< HEAD
       return axios.get(`${URL}/api/sessions/`, headers);
     }
   
@@ -62,6 +70,25 @@ class SessionDataService {
   
     delete(id) {
       return axios.delete(`${URL}/api/sessions/${id}/`);
+=======
+      return axios.get(`${URL}api/sessions/`, headers);
+    }
+  
+    get(id) {
+      return axios.get(`${URL}api/sessions/${id}`);
+    }
+  
+    create(data, headers) {
+      return axios.post(`${URL}api/sessions/`, data, headers);
+    }
+  
+    update(id, data, headers) {
+      return axios.put(`${URL}api/sessions/${id}/`, data, headers);
+    }
+  
+    delete(id) {
+      return axios.delete(`${URL}api/sessions/${id}/`);
+>>>>>>> 4c4b8469dc83b578417ad4eabdaa2fb9e8c85a4b
     }
     
     // deleteAll() {
