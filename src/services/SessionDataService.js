@@ -1,7 +1,7 @@
 import axios from 'axios';
 const CancelToken = axios.CancelToken
 let cancel;
-const URL = 'shielded-fjord-98167.herokuapp.com/'
+const URL = 'https://shielded-fjord-98167.herokuapp.com/'
 class SessionDataService {
     state = {
       cancelToken: new CancelToken(function executor(c) {
