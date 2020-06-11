@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as ChartJS from 'chart.js';
-import { ChartOptions } from 'chart.js';
-// import classNames from 'classnames';
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
 
 class Chart extends Component {
@@ -24,8 +22,9 @@ class Chart extends Component {
                     data: [props.required_temp],
                     fill: false,
                     backgroundColor: 'rgba(255, 0, 0, 1)',
-					borderColor: 'rgba(255, 0, 0, 1)',
-                }]
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                }
+            ]
 			},
 			options: {
                 animation: {

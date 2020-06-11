@@ -3,7 +3,7 @@ import { useAuth } from '../components/auth'
 import SessionDataService from '../services/SessionDataService'
 import axios from 'axios';
 import AuthService from '../services/AuthService'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner'
 
 const HomePage = (props) => {
@@ -11,7 +11,7 @@ const HomePage = (props) => {
     const [ loading, setLoading ] = useState(false)
     const [ noCurrentSession, setNoCurrentSession ] = useState(true)
     const [ errMsg, setErrMsg ] = useState("")
-    
+    let history = useHistory()
     var options = {
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const HomePage = (props) => {
           return
         }
         setLoading(false)
-        // props.history.push('/sessions/current', response.data.results[0])
+        props.history.push('/sessions/current', response.data.results[0])
       })
       .catch(err=>{
         setLoading(false)
@@ -42,10 +42,7 @@ const HomePage = (props) => {
     }, [])
   
 
-    const logOut = ()=> {
-      setAuthTokens()
-      AuthService.logout()
-    }
+    
 
     // if (currentIsTrue){
     //   console.log(currentSession)
@@ -57,9 +54,9 @@ const HomePage = (props) => {
         <span className="sr-only">Loading...</span>
       </Spinner>) : 
       <div>
-        <h3>Home Less</h3>
-        <Link to="/login">Login</Link>
-        <button onClick={logOut}> Logout</button>
+        <hr />
+          <h3 style={{textAlign: "center"}}>Home Less</h3>
+        <hr />
       </div>
     
 }

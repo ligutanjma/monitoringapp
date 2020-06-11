@@ -2,7 +2,8 @@ import decode from 'jwt-decode'
 import axios from 'axios'
 class AuthService {
     // Initializing important variables
-    domain = 'https://shielded-fjord-98167.herokuapp.com/api' // API server domain
+    // domain = 'https://shielded-fjord-98167.herokuapp.com/api' // API server domain
+    domain = 'http://0.0.0.0:8000/api' // API server domain
     
 
     login (username, password){
@@ -46,6 +47,7 @@ class AuthService {
     logout=()=> {
         // Clear user token and profile data from localStorage
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
     }
 
     getProfile=()=> {
