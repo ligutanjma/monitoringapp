@@ -7,12 +7,14 @@ import LandingPage from './components/LandingPage'
 import PrivateRoute from './components/PrivateRoute'
 import { AuthContext } from './components/auth'
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
 import AuthService from "./services/AuthService";
 import {Header} from "./views/header"
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const App = () => {
 
   const existingToken = JSON.parse(localStorage.getItem("token"));

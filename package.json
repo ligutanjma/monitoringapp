@@ -1,17 +1,26 @@
 {
   "name": "nmfic",
-  "productName":"NmficDBMS",
+  "productName": "NMFIC's DBMS",
   "description": "Database management system for NMFIC's client records",
   "author": {
     "name": "SNEL",
     "email": "ligutanjm@yahoo.com",
-    "url":"https://www.facebook.com/emligutan"
+    "url": "https://www.facebook.com/emligutan"
+  },
+  "build": {
+    "appId": "org.thesis.softeng.app",
+    "productName": "NMFIC's DBMS",
+    "files": [
+      "./build/**/*",
+      "./src/electron-starter.js"
+    ],
+    "extends": null
   },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
     "jwt-decode": "^2.2.0",
@@ -31,7 +40,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0"
   },
-  "main": "src/electron-starter.js",
+  "main": "./src/electron-starter.js",
   "homepage": "./",
   "scripts": {
     "start": "BROWSER=none nf start -p 3000",
@@ -40,7 +49,9 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
-    "react-start": "react-scripts start"
+    "react-start": "react-scripts start",
+    "pack": "build --dir",
+    "dist:windows": "electron-builder --windows"
   },
   "eslintConfig": {
     "extends": "react-app"

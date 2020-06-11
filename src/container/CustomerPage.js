@@ -1,11 +1,9 @@
 import React, { useState, useEffect} from 'react'
 import { useAuth } from '../components/auth'
 import CustomerDataService from '../services/CustomerDataService'
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {FaSearch} from 'react-icons/fa'
-import {MdHistory} from 'react-icons/md'
-import {IoIosCall} from 'react-icons/io'
 import {AiOutlinePlus, AiOutlineDelete} from 'react-icons/ai'
 
 
@@ -94,6 +92,7 @@ const small_screen_columns = [{
         
 
 export const UpdateCustomer = (props) => {
+  let history = useHistory()
   const [customer_name, setCustomerName] = useState(props.location.state.customer_name)
   const [product_name, setProductName] = useState(props.location.state.product_name)
   const [gender, setGender] = useState(props.location.state.gender)
@@ -169,7 +168,7 @@ export const UpdateCustomer = (props) => {
       .then(response => {
         // props.history.push('/sessions/current', response.data)
         setLoading(false)
-        props.history.push('/customers')
+        history.push({pathname:'/customers'})
       })
       .catch(e => {
         try{
@@ -443,7 +442,7 @@ export const AddCustomer = (props) => {
     const [isLoading, setLoading] = useState(false);
 
     const { authTokens } = useAuth()
-
+    let history = useHistory()
     useEffect(() => {
       if (isLoading) {
         add_customer()
@@ -490,7 +489,8 @@ export const AddCustomer = (props) => {
           .then(response => {
             // props.history.push('/sessions/current', response.data)
             setLoading(false)
-            props.history.push('/customers')
+            history.push({pathname:'/customers'})
+
           })
           .catch(e => {
             console.log(e)
@@ -506,15 +506,15 @@ export const AddCustomer = (props) => {
     
       }
     return (
-      <div className="col" style={{ paddingTop: "10px"}}>
-              <br />
-              <div >
-                <h2 className="w3-text-white" style={{textAlign: "center", margin: "0 0 15px", textShadow:"2px 2px 4px #000000"}}>JOB ORDER FORM</h2>
-              </div>
-              <div className="row">
-                <div className="col" ></div>
-                <div className="col-5" style={{ borderColor: "lightgrey", borderWidth : "1px", borderStyle: "solid", padding : "10px", 
-                boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1)"}}>
+      <div className="w3-container" style={{width:"500px",margin:"auto", paddingTop: "10px"}}>
+
+        <br />
+        <div  className="w3-row">
+          <h2 className="w3-text-white" style={{textAlign: "center", margin: "0 0 15px", textShadow:"2px 2px 4px #000000"}}>JOB ORDER FORM</h2>
+        </div>
+        <div className="w3-row">
+          <div className="w3-container" style={{width:"500px",  borderColor: "lightgrey", borderWidth : "1px", borderStyle: "solid", padding : "10px", 
+            boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1),"}}>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <fieldset>
                     <Form.Group className="w3-large">
@@ -746,7 +746,6 @@ export const AddCustomer = (props) => {
                   </Modal.Footer>
                 </Modal>
                 </div>
-                <div className="col"></div>
                 
               </div>
               <br />
@@ -754,6 +753,7 @@ export const AddCustomer = (props) => {
     )
 }
 const CustomerList = (props) => {
+  let history= useHistory()
   const MyVerticallyCenteredModal=(props)=>{
 
     return (
@@ -938,7 +938,7 @@ const CustomerList = (props) => {
                           striped
                           bootstrap4
                           rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            props.prop.history.push('/customers/update', row)
+                            history.push({pathname:'/customers/update',state: row})
                             
                           }}}
                           pagination={paginationFactory(options)}
@@ -951,7 +951,8 @@ const CustomerList = (props) => {
                           
                           striped
                           rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            props.prop.history.push('/customers/update', row)
+                            history.push({pathname:'/customers/update',state: row})
+
                             
                           }}}
                           pagination={paginationFactory(options)}
@@ -981,7 +982,8 @@ const CustomerList = (props) => {
                           
                           striped
                           rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            props.prop.history.push('/customers/update', row)
+                            history.push({pathname:'/customers/update',state: row})
+
                             
                           }}}
                           pagination={paginationFactory(options)}

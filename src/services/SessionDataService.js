@@ -3,7 +3,7 @@ const CancelToken = axios.CancelToken
 let cancel;
 // const URL = 'https://shielded-fjord-98167.herokuapp.com/'
 // const URL = 'http://192.168.1.8:8000/'
-const URL = 'http://0.0.0.0:8000/api/' // API server domain
+const URL = 'http://127.0.0.1:8000/' // API server domain
 
 class SessionDataService {
     state = {

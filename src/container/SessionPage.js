@@ -1,19 +1,17 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Link,
-    Redirect,
+    NavLink,
     useHistory
   } from "react-router-dom";
 import { Container, Row, Col, Form, Modal, Button, Table, OverlayTrigger, Tooltip} from 'react-bootstrap';
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import BootstrapTable from 'react-bootstrap-table-next';
 import SessionDataService from '../services/SessionDataService'
 import {useAuth} from '../components/auth'
 import Spinner from 'react-bootstrap/Spinner'
 
 import {FaSearch} from 'react-icons/fa'
-import {MdHistory} from 'react-icons/md'
-import {IoIosCall} from 'react-icons/io'
 import {AiOutlinePlus, AiOutlineDelete} from 'react-icons/ai'
 import { InputGroup, FormControl} from 'react-bootstrap';
 
@@ -279,10 +277,7 @@ const SessionList = (props) => {
                         <BootstrapTable
                           striped
                           bootstrap4
-                          rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            history.push('/sessions/current', row)
-                            
-                          }}}
+                          rowEvents= {{onDoubleClick: (e, row, rowIndex) => history.push({pathname:"/sessions/current", state:row}) }}
                           pagination={paginationFactory(options)}
                           filter={filterFactory()}
                           {...table_props.baseProps}>
@@ -290,12 +285,9 @@ const SessionList = (props) => {
                       </div>
                       <div className="w3-card-2 w3-padding w3-hide-large w3-hide-medium" style={{whiteSpace:"nowrap", boxSizing:"border-box"}}>
                         <BootstrapTable
-                          
                           striped
-                          rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            history.push('/sessions/current', row)
-                            
-                          }}}
+                          rowEvents= {{onDoubleClick: (e, row, rowIndex) => history.push({pathname:"/sessions/current", state:row}) }}
+
                           pagination={paginationFactory(options)}
                           filter={filterFactory()}
                           {...table_props.baseProps}>
@@ -320,12 +312,8 @@ const SessionList = (props) => {
                     <div className="w3-hide-large w3-hide-medium">
                       
                         <BootstrapTable
-                          
                           striped
-                          rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            history.push('/sessions/current', row)
-                            
-                          }}}
+                          rowEvents= {{onDoubleClick: (e, row, rowIndex) => history.push({pathname:"/sessions/current", state:row}) }}
                           pagination={paginationFactory(options)}
                           {...table_props.baseProps}>
                         </BootstrapTable> 
@@ -442,16 +430,16 @@ export const AddSessions = (props) => {
   }
 
   return (
-    <div className="col">
+    <div className="w3-container" style={{width:"500px",margin:"auto", paddingTop: "10px"}}>
+
               <br />
-              <div >
+              <div className="w3-row" >
+
                 <h2 className="w3-text-white" style={{textAlign: "center", margin: "0 0 15px", textShadow:"2px 2px 4px #000000"}}>SESSION DETAILS</h2>
               </div>
               <div className="row">
-                <div className="col"></div>
-                <div className="col-5" style={{  padding : "10px",
-                boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1)"}}>
-                <br />
+                <div className="w3-container" style={{width:"500px",  borderColor: "lightgrey", borderWidth : "1px", borderStyle: "solid", padding : "10px", 
+              boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1),"}}>
                 
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                   
@@ -626,7 +614,7 @@ export const AddSessions = (props) => {
                         </tbody>
                       </Table>
                       <div style={{fontWeight:"bold",textAlign: "center"}} >
-                          <code style={{ color:"red",margin:"0 0 0 0"}}>{errorMessage}<a ref={aRef} href="/sessions/current" style={{fontSize:"inherit", display:"none"}}> View it here.</a></code>
+                          <code style={{ color:"red",margin:"0 0 0 0"}}>{errorMessage}<NavLink ref={aRef} to="/sessions" style={{fontSize:"inherit", display:"none"}}> View it here.</NavLink></code>
                           
                       </div>
                     </Container>
@@ -654,7 +642,6 @@ export const AddSessions = (props) => {
                   </Modal.Footer>
                 </Modal>
                 </div>
-                <div className="col"></div>
                 
               </div>
               <br />

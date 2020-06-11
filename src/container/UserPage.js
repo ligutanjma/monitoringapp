@@ -4,7 +4,7 @@ import UserDataService from '../services/UserDataService'
 import {DataList} from '../components/DataList'
 import filterFactory, { dateFilter,Comparator } from 'react-bootstrap-table2-filter';
 import { Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl, OverlayTrigger, Tooltip} from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const columns = [{
     dataField:"date_joined",
@@ -110,7 +110,7 @@ export const AddUser = (props) => {
   const [isLoading, setLoading] = useState(false);
   let {userProfile} = useAuth()
   const { authTokens } = useAuth()
-
+  let history= useHistory()
  
 
   const handleClose = () => setShow(false);
@@ -170,7 +170,7 @@ export const AddUser = (props) => {
       UserDataService.create(data, options)
         .then(response => {
           setLoading(false)
-          props.history.push('/users')
+          history.push({pathname:'/users'})
         })
         .catch(e => {
           setLoading(false)
@@ -379,7 +379,7 @@ export const UpdateUser = (props) => {
   const [isLoading, setLoading] = useState(false);
   const { authTokens } = useAuth()
   let {userProfile} = useAuth()
-
+  let history=useHistory()
 
   useEffect(() => {
     setfirst_name(props.location.state.first_name)
@@ -428,6 +428,7 @@ export const UpdateUser = (props) => {
   
   
   const update_user =()=>{
+
       var data = {
         "username": username,
         "first_name": first_name,
@@ -444,7 +445,7 @@ export const UpdateUser = (props) => {
       UserDataService.patch(props.location.state.id, data, options)
         .then(response => {
           setLoading(false)
-          props.history.push('/users')
+          history.push({pathname:'/users'})
         })
         .catch(e => {
           setErrMessage("Something went wrong. Please try again!")

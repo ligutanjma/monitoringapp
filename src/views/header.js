@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react';
 import { Modal, Button } from 'react-bootstrap'
 import AuthService from '../services/AuthService'
-import {  useLocation} from 'react-router-dom'
+import { useLocation,Link as NavLink} from 'react-router-dom'
 import NMFICLOGO from '../assets/NMFICLOGO.jpg'
-import {  useAuth } from '../components/auth'
+import { useAuth } from '../components/auth'
 
-import { Navbar, Nav, NavLink} from 'react-bootstrap'
+import { Navbar, Nav} from 'react-bootstrap'
 
 export const Header = props => {
   const { logout } = useAuth()
@@ -79,10 +79,10 @@ export const Header = props => {
               <Nav 
               className="w3-bar w3-light-grey w3-round w3-display-bottommiddle" 
               style={{bottom:"-13px", boxShadow:"0 4px 8px rgb(0,0,0,0.2), 0 16px 32px rgb(0,0,0,0.1)",}}>
-                  <NavLink className="w3-bar-item" href="/customers" active={location.pathname==='/customers'}>Customers</NavLink>
-                  <NavLink className="w3-bar-item" href="/sessions"  active={location.pathname==='/sessions'}>Sessions</NavLink>
-                  <NavLink className="w3-bar-item" href="/users"  active={location.pathname==='/users'}>Users</NavLink>
-                  <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item" >Logout</NavLink>
+                  <NavLink className="w3-bar-item" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Customers</NavLink>
+                  <NavLink className="w3-bar-item" to="/sessions"   style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Sessions</NavLink>
+                <NavLink className="w3-bar-item" to="/users"  style={location.pathname==='/users'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Users</NavLink>
+                  <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item"  style={{color:"gray"}}>Logout</NavLink>
               </Nav>
               <MyVerticallyCenteredModal
                 show={modalShow}
@@ -98,17 +98,17 @@ export const Header = props => {
         
         <Navbar className=" w3-display-container w3-center w3-hide-large" style={{maxWidth: "1500px",}}>
           <Nav className="w3-light-grey w3-display-bottommiddle w3-round" 
-            style={{bottom:"-13px", boxShadow:"4px 4px 8px 4px rgb(0,0,0,0.2), 16px 16px 32px 16px rgb(0,0,0,0.1)"}}>
+            style={{bottom:"-22px", boxShadow:"4px 4px 8px 4px rgb(0,0,0,0.2), 16px 16px 32px 16px rgb(0,0,0,0.1)"}}>
         
             
-            <NavLink className="w3-bar-item" href="/customers" active={location.pathname==='/customers'}>
+            <NavLink className="w3-bar-item w3-margin" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>
                 Customers
             </NavLink>
-            <NavLink className="w3-bar-item" href="/sessions" active={location.pathname==='/sessions'} >
+            <NavLink className="w3-bar-item w3-margin" to="/sessions" style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>
                 Sessions
             </NavLink>
-            <NavLink className="w3-bar-item" href="/users"  active={location.pathname==='/users'}>Users</NavLink>
-            <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item">Logout</NavLink>
+            <NavLink className="w3-bar-item w3-margin" to="/users"   style={location.pathname==='/users'?{ fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Users</NavLink>
+            <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item w3-margin" style={{color:"gray"}}>Logout</NavLink>
           </Nav>
         </Navbar>
       <br/>

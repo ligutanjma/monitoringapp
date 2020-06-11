@@ -15,6 +15,7 @@ import { FaRegStopCircle } from 'react-icons/fa'
 
 
 const CurrentSessions = (props) => {
+    console.log(props)
     var chartRef;
     const [readings, setReadings] = React.useState({
         temperature:[],
@@ -32,7 +33,7 @@ const CurrentSessions = (props) => {
     const [modalInputName, setModalInputName] = React.useState('')
     const [isSlicedReadings, setIsSlicedReadings] = React.useState(false)
     const [renderedSlicedReadingsToGraph, setRenderedSlicedReadingsToGraph] = React.useState(false)
-    const URL = "ws://192.168.1.8:8000/"
+    const URL = "ws://127.0.0.1:8000/"
     const { authTokens } = useAuth()
     let history = useHistory()
     
@@ -266,7 +267,7 @@ const CurrentSessions = (props) => {
             "started" : true
         })
         SessionDataService.update(props.location.state.pk, to_update, headers).then(response=>{
-            history.push('/sessions/current', response.data)
+            history.push({pathname:'/sessions/current',state: response.data})
         })
         .catch((err)=> {
             console.log(err.response)
@@ -310,7 +311,8 @@ const CurrentSessions = (props) => {
         // console.log(formatDate(new Date(Date.now()), '%Y-%M-%d %H:%m:%s'))
 
         SessionDataService.update(props.location.state.pk, to_update, headers).then(response=>{
-            history.push('/sessions/current', response.data)
+            history.push({pathname:'/sessions/current',state: response.data})
+
         })
         .catch((err)=> {
             console.log(err.response)
@@ -338,7 +340,7 @@ const CurrentSessions = (props) => {
             // console.log(formatDate(new Date(Date.now()), '%Y-%M-%d %H:%m:%s'))
     
             SessionDataService.update(props.location.state.pk, to_update, headers).then(response=>{
-                history.push('/sessions')
+                history.push({pathname:'/sessions'})
             })
             .catch((err)=> {
                 console.log(err.response)
@@ -469,7 +471,7 @@ const CurrentSessions = (props) => {
                                         delay={{ show: 250, hide: 300 }}
                                         overlay={
                                             <Tooltip id="button-tooltip">
-                                                Stop!
+                                                Stop
                                             </Tooltip>
                                         }
                                     >
@@ -555,7 +557,7 @@ const CurrentSessions = (props) => {
                                         delay={{ show: 250, hide: 300 }}
                                         overlay={
                                             <Tooltip id="button-tooltip">
-                                                Stop!
+                                                Stop
                                             </Tooltip>
                                         }
                                     >
@@ -630,7 +632,7 @@ const CurrentSessions = (props) => {
                                         delay={{ show: 250, hide: 300 }}
                                         overlay={
                                             <Tooltip id="button-tooltip">
-                                                Stop!
+                                                Stop
                                             </Tooltip>
                                         }
                                     >
