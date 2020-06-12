@@ -7,9 +7,10 @@ import filterFactory from 'react-bootstrap-table2-filter';
 import Spinner from 'react-bootstrap/Spinner'
 import {FaSearch} from 'react-icons/fa'
 import {AiOutlinePlus, AiOutlineDelete} from 'react-icons/ai'
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 
 export const DataList = (props)=>{
+  let history = useHistory()
     const MyVerticallyCenteredModal=(props)=>{
 
         return (
@@ -200,7 +201,8 @@ export const DataList = (props)=>{
                           striped
                           bootstrap4
                           rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            props.prop.history.push('/users/update', row)
+                            console.log(row)
+                            history.push({pathname:'/users/update',state: row})
                             
                           }}}
                           pagination={paginationFactory(options)}
@@ -213,7 +215,8 @@ export const DataList = (props)=>{
                           
                           striped
                           rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            props.prop.history.push('/users/update', row)
+                            history.push({pathname:'/users/update',state: row})
+
                             
                           }}}
                           pagination={paginationFactory(options)}
@@ -243,8 +246,8 @@ export const DataList = (props)=>{
                           
                           striped
                           rowEvents= {{onDoubleClick: (e, row, rowIndex) => {
-                            props.prop.history.push('/users/update', row)
-                            
+                            history.push({pathname:'/users/update',state: row})
+
                           }}}
                           pagination={paginationFactory(options)}
                           {...table_props.baseProps}>
