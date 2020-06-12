@@ -7,128 +7,97 @@ import {useAuth} from '../components/auth'
 
 
 const CurrentSessions = (props) => {
-    var chartRef;
+    const chartRef = React.useRef()
+    const [loading, setLoading] = React.useState(false)
+    const [errorMessage, setErrorMessage] = React.useState(false)
+    const [currentSession, setCurrentSession] = React.useState()
+    const [ws, setWS] = React.useState(null)
     const [readings, setReadings] = React.useState({
-        temperature:[],
+        reading:[],
         time: []
     })
-    const [WSclose, setWSclose] = React.useState(false)
-    const [ws, setWS] = React.useState()
-    const [reconTime, setReconTime] = React.useState(250)
-    const [show, setShow] = React.useState(false);
-    const [modalInputTemp, setModalInputTemp] = React.useState('')
-    const [modalInputName, setModalInputName] = React.useState('')
     const [isSlicedReadings, setIsSlicedReadings] = React.useState(false)
     const [renderedSlicedReadingsToGraph, setRenderedSlicedReadingsToGraph] = React.useState(false)
-    const URL = "ws://127.0.0.1:8000/"
+    const [markerLabel, setMarkerLabel] = React.useState(250)
+    const [markerValue, setMarkerValue] = React.useState(250)
+    const [show, setShow] = React.useState(false)
+    const [reconTime, setReconTime] = React.useState(250)
+    const URL = "ws://192.168.1.7:8000/"
     const { authTokens } = useAuth()
    
-    
+    // getting Current Session
     React.useEffect(()=>{
-        if(props.location.state.ended === true){
-            const websocket = new WebSocket(`${URL}ws/equipments/water_retort/A0temp/`)
-            websocket.onopen = () => {
-                console.log('websocket opened')
-                var message = {
-                    "type": "slice",
-                    "session_id": props.location.state.pk 
-                }
-                websocket.send(JSON.stringify(message))
+        console.log("otokens")
+        setLoading(true)
+        var headers = {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'JWT ' + authTokens
             }
-            websocket.onmessage = (response) => {
-                var data = JSON.parse(response.data)
-                var readingsCopy = Object.assign({}, readings);
-                for(const [key, value] of Object.entries(data)){
-                    console.log(key,value)
-                    readingsCopy.time.push(key)
-                    readingsCopy.temperature.push(value)
-                }
-                setReadings(readingsCopy)
-            }
-            websocket.onclose = e => {
-                console.log('clossing')
-                setReconTime((prevState) =>  prevState + prevState)
-                setTimeout(() => check(), Math.min(10000, reconTime))};
-        
-            // websocket onerror event listener
-            websocket.onerror = err => {
-                console.error(
-                    "Socket encountered error: ",
-                    err.message,
-                    "Closing socket"
-                );
-                console.log("error")
-                
-               
-                
-            };
-        }
-        else {
+          }
+        SessionDataService.getCurrent(headers)
+            .then(response=>{
+                setLoading(false)
+                console.log(chartRef)
+                setCurrentSession(response.data.results[0])
+                var required_temp_dataset = Object.assign({
+                    label: 'Required Temperature',
+                    data: [response.data.results[0].required_temp],
+                    fill: false,
+                    backgroundColor: 'rgba(255, 0, 0, 1)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                })
+                chartRef.current.chart.config.data.datasets.push(required_temp_dataset)
+                chartRef.current.chart.update()
+            })
+            .catch(err=>{
+                console.log(err)
+                setLoading(false)
+                try{
+                    setErrorMessage(err.response.data.non_field_errors[0]);
+                  }catch{
+                    setErrorMessage("Network Error. Please check your network connection.")
+                  }
+            })
+    }, [authTokens, chartRef])
+
+    // Chart data initializations
+
+    React.useEffect(()=>{
+
         const websocket = new WebSocket(`${URL}ws/clients/`);
         websocket.onopen = () => {
-            if(props.location.state.started === true && renderedSlicedReadingsToGraph === false){
-                var message = {
-                    "type": 'started',
-                    "session_id" : props.location.state.pk
-                }
-                console.log('this session have already started')
-                websocket.send(JSON.stringify(message))
-            }
             setWS(websocket)
+
         };
         websocket.onmessage = response => { 
             // add the new message to state
-            var data = JSON.parse(response.data)
+            var readings_data = JSON.parse(response.data)
             var readingsCopy = Object.assign({}, readings);
 
-            // check if the session has already started and if the starting_point to 
-            // ending_point readings is already rendered to the graph 
-            // If session is started and not yet rendered to the chart, DO THE FOLLOWING:
-            if(data.type === "session_started" && renderedSlicedReadingsToGraph === false){
+            if(readings_data.type ==="sensor_readings"){
+                readingsCopy.reading.push(readings_data.reading)
+                readingsCopy.time.push(readings_data.time)
+                setReadings(readingsCopy)
+            }else if(readings_data.type === "session_started" && renderedSlicedReadingsToGraph === false){
                 // store the incoming list of readings to the Readings variable
-                for(const [key, value] of Object.entries(data.message)){
+                for(const [key, value] of Object.entries(readings_data.message)){
                     readingsCopy.time.push(key)
-                    readingsCopy.temperature.push(value)
+                    readingsCopy.reading.push(value)
                 }
                 // setStarted(true)
                 setIsSlicedReadings(true)
                 setReadings(readingsCopy)
-                
-            }else if(data.type === "session_starts"){
-                var headers = {
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': 'JWT ' + authTokens
-                    }
-                  }
-                SessionDataService.getCurrent(headers).then(response=>{
-                    
-                    props.history.push('/sessions/current', response.data.results[0])
-                })
+            }else if(readings_data.type === "session_starts"){
+                setCurrentSession({...currentSession, started:true})
             }
-            else if(data.type === "ended"){
-                websocket.close()
-                props.history.push('/sessions')
 
-            }else{
-                readingsCopy.temperature.push(data.reading)
-                readingsCopy.time.push(data.time)
-                setIsSlicedReadings(false)
-                setReadings(readingsCopy)
-
-            }
-            
-            
           };
-        
-        
-    
         // websocket onclose event listener
         websocket.onclose = e => {
             console.log('clossing')
-            setReconTime((prevState) =>  prevState + prevState)
-            setTimeout(() => check(), Math.min(10000, reconTime))};
-    
+            setTimeout(() => setReconTime((prevState) =>  prevState + prevState), Math.min(10000, reconTime))};
+
         // websocket onerror event listener
         websocket.onerror = err => {
             console.error(
@@ -141,64 +110,46 @@ const CurrentSessions = (props) => {
            
             
         };
-    }
+    }, [reconTime])
+
     
-    }, [WSclose])
     React.useEffect(()=>{
-        if(ws !== undefined){
-            if (isSlicedReadings === true){
-                for(var i = 0; i < readings.temperature.length; ++i){
-                    chartRef.chart.config.data.datasets[0].data.push(readings.temperature[i])
-                    chartRef.chart.config.data.labels.push(readings.time[i])
-                    chartRef.chart.config.data.datasets[1].data.push(props.location.state.required_temp)
-                }
-                setRenderedSlicedReadingsToGraph(true)
-                chartRef.chart.update()
+        if(currentSession===undefined){
+            return
+        }else if(readings.reading[readings.reading.length-1] !==undefined){
 
-            }else{
-                // from sensor to chart. Live graphing
-                if(readings.time[readings.time.length-1] ===undefined){
-                    return
-                }
-                chartRef.chart.config.data.datasets[0].data.push(readings.temperature[readings.temperature.length-1])
-                chartRef.chart.config.data.labels.push(readings.time[readings.time.length-1])
-                for(var i = 0; i < chartRef.chart.config.data.labels.length; ++i){
-                    chartRef.chart.config.data.datasets[1].data.push(props.location.state.required_temp)
-                }
-                chartRef.chart.update()
+            console.log(readings)
+            chartRef.current.state.data.datasets[0].data.push(readings.reading[readings.reading.length-1])
+            chartRef.current.state.data.labels.push(readings.time[readings.time.length-1])
+            for(var i = 0; i < chartRef.current.chart.config.data.labels.length; ++i){
+                chartRef.current.chart.config.data.datasets[1].data.push(currentSession.required_temp)
             }
+            chartRef.current.chart.update()
+            console.log(currentSession.started)
+            // if(currentSession.started ===true ){
+            //     console.log('this session have already started')
+            //     var message = {
+            //         "type": "started",
+            //         "session_id" : currentSession.id
+            //     }
+            //     console.log('this session have already started')
+            //     ws.send(JSON.stringify(message))
+            // }
         }
-        else {
-            for(var i = 0; i < readings.temperature.length; ++i){
-                chartRef.chart.config.data.datasets[0].data.push(readings.temperature[i])
-                chartRef.chart.config.data.labels.push(readings.time[i])
-                chartRef.chart.config.data.datasets[1].data.push(props.location.state.required_temp)
-            }
-            chartRef.chart.update()
-        }
-        // this.canvas.chart.config.data.labels.push(this.state.readings.time[this.state.readings.time.length-1])
-        //         this.canvas.chart.config.data.datasets[0].data.push(this.state.readings.temp[this.state.readings.temp.length-1])
-        //         for (var index = 0; index < this.canvas.chart.config.data.labels.length; ++index) {
-        //             this.canvas.chart.config.data.datasets[1].data.push(this.props.location.state.required_temp)
-        //         }
-        //         this.canvas.chart.update()
-    }, [readings])
-
-    const check = () => {
-        if (!ws || ws.readyState === WebSocket.CLOSED){
-            setWSclose(prevState=> !prevState)
-        }; //check if websocket instance is closed, if so call `connect` function.
-    }
-
+        
+        // for(var i = 0; i < chartRef.current.state.data.labels.length; ++i){
+        //     chartRef.state.data.datasets[1].data.push(currentSession.required_temp)
+        // }
+    }, [ws])
     
     const startSession =()=>{
-        if(ws === undefined || readings.time[readings.time.length-1]=== undefined){
+        if(ws === undefined || readings.time[readings.time.length-1]=== undefined || currentSession.started===undefined){
             return
         }
         
         var message = {
             "type": "session_starts",
-            "session_id": props.location.state.pk
+            "session_id": currentSession.pk
         }
         ws.send(JSON.stringify(message))   
         
@@ -218,8 +169,8 @@ const CurrentSessions = (props) => {
                 }
             })
             
-            chartRef.chart.config.options.annotation.annotations.push(object)
-            chartRef.chart.update()
+            chartRef.current.chart.config.options.annotation.annotations.push(object)
+            chartRef.current.chart.update()
         }
         
     }
@@ -229,7 +180,7 @@ const CurrentSessions = (props) => {
         }
         var message = {
             "type": "cool",
-            "session_id": props.location.state.pk
+            "session_id": currentSession.pk
         }
         // setStartedAlready(true)
         ws.send(JSON.stringify(message))
@@ -248,8 +199,8 @@ const CurrentSessions = (props) => {
                     position: 'top'
                 }
             })
-        chartRef.chart.config.options.annotation.annotations.push(object)
-        chartRef.chart.update()
+        chartRef.current.state.options.annotation.annotations.push(object)
+        chartRef.current.chart.update()
         }
         
     }
@@ -261,7 +212,7 @@ const CurrentSessions = (props) => {
         if (confirm === true){
             var message = {
                 "type": "end",
-                "session_id": props.location.state.pk
+                "session_id": currentSession.pk
             }
     
             
@@ -293,23 +244,23 @@ const CurrentSessions = (props) => {
         
         if(readings.time[readings.time.length-1] !== undefined){
             var object = Object.assign({
-                id: "marker_label_"+modalInputTemp,
+                id: "marker_label_"+markerLabel,
                 type: 'line',
                 mode: 'horizontal',
                 scaleID: 'y-axis-0',
-                value: modalInputTemp,
+                value: markerValue,
                 borderColor: "green",
                 label: {
                     backgroundColor: 'red',
-                    content: modalInputName,
+                    content: markerValue,
                     enabled: true,
                     position: 'center'
                 }
             })
             
         }
-        chartRef.chart.config.options.annotation.annotations.push(object)
-        chartRef.chart.update()
+        chartRef.current.state.options.annotation.annotations.push(object)
+        chartRef.current.chart.update()
         handleClose()
     }
     // if(props.location.state === undefined){ 
@@ -323,14 +274,11 @@ const CurrentSessions = (props) => {
     };
     return ( 
         <Container fluid >
-               
                <Row>
                    <br />
-                   
                    <Col>
                    <br />
                        <Row className="m-2">
-                            
                        </Row>
                        <br />
                        <Row>
@@ -344,8 +292,8 @@ const CurrentSessions = (props) => {
                                     <Modal.Title>Modal heading</Modal.Title>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <input className="form-control form-control-sm m-2" type="text" placeholder="Temperature:" name="modalInputTemp" value={modalInputName} onChange={e=>setModalInputName(e.target.value)} />
-                                    <input className="form-control form-control-sm m-2" type="text" placeholder="Temperature:" name="modalInputTemp" value={modalInputTemp} onChange={e=>setModalInputTemp(e.target.value)} />
+                                    <input className="form-control form-control-sm m-2" type="text" placeholder="Temperature:" name="modalInputTemp" value={markerLabel} onChange={e=>setMarkerLabel(e.target.value)} />
+                                    <input className="form-control form-control-sm m-2" type="text" placeholder="Temperature:" name="modalInputTemp" value={markerValue} onChange={e=>setMarkerValue(e.target.value)} />
                                 </Modal.Body>
                                 <Modal.Footer>
                                 <Button variant="secondary" onClick={handleClose}>
@@ -365,23 +313,22 @@ const CurrentSessions = (props) => {
                    <br />
 
                         <Row>
-                            <ListGroup horizontal>
+                            {/* <ListGroup horizontal>
                                     <ListGroup.Item> {props.location.state.product_name} </ListGroup.Item>
                                     <ListGroup.Item> {props.location.state.process_name} </ListGroup.Item>
                                     <ListGroup.Item> {props.location.state.session_name} </ListGroup.Item>
                                     <ListGroup.Item> {props.location.state.required_temp} </ListGroup.Item>
                                     <ListGroup.Item> {props.location.state.holding_time} </ListGroup.Item>
                                     <ListGroup.Item> {props.location.state.operator} </ListGroup.Item>
-                            </ListGroup>
+                            </ListGroup> */}
 
                         </Row>
                         <br />
                        
                         <Chart 
-                            ref={ref=> chartRef = ref}
-                            name={'Required Temperature'} 
-                            required_temp={props.location.state.required_temp.toString()}
-                            readings={readings}>
+                            ref={chartRef}
+                            // required_temp={currentSession.required_temp.toString()}
+                            >
                         </Chart>
                    
                    </Col>

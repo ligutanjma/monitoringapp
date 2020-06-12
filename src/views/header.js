@@ -1,134 +1,118 @@
-import React from 'react'
-import { ListGroup } from 'react-bootstrap'
+import React, {useState} from 'react';
+import { Modal, Button } from 'react-bootstrap'
 import AuthService from '../services/AuthService'
-import { NavLink, Redirect, Prompt } from 'react-router-dom'
+import { useLocation,Link as NavLink} from 'react-router-dom'
+import NMFICLOGO from '../assets/NMFICLOGO.jpg'
+import { useAuth } from '../components/auth'
+
+import { Navbar, Nav} from 'react-bootstrap'
+
 export const Header = props => {
-        return(
-            
-        <div>
-        <div className="w3-padding-large w3-border w3-wide w3-amber w3-text-light-grey w3-center">
-          <div className="w3-row ">
-            <div className="w3-col s2 w3-center w3-hide-small">Logo</div>
-            <div className="w3-col s10 w3-center">
-            {/* Show when Large */}
-              <h2 className="w3-hide-medium w3-hide-small w3-xxxlarge">NORTHERN MINDANAO</h2>
-              <h2 className="w3-hide-medium w3-hide-small w3-xxxlarge">FOOD INNOVATION CENTER</h2>
-              {/* Show when Medium */}
+  const { logout } = useAuth()
+  const [modalShow, setModalShow] = useState(false);
+  let location = useLocation()
 
-              <h4 className="w3-hide-large w3-hide-large w3-hide-small" style={{whiteSpace: "nowrap"}}>NORTHERN MINDANAO</h4>
-              <h4 className="w3-hide-large w3-hide-large w3-hide-small" style={{whiteSpace: "nowrap"}}>FOOD INNOVATION CENTER</h4>
-              {/* Show only when Large */}
-              <h3 className="w3-hide-medium w3-hide-small">Data Management System</h3>
-            </div> 
-              <h6 className="w3-hide-large w3-hide-medium" style={{whiteSpace: "nowrap"}}>NORTHERN MINDANAO</h6>
-              <h6 className="w3-hide-large w3-hide-medium" style={{whiteSpace: "nowrap"}}>FOOD INNOVATION CENTER</h6>
+
+  const MyVerticallyCenteredModal=(props)=>{
+
+    return (
+      <Modal
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Confirmation
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Are you sure you want to logout?</h4>
+          
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-dark" onClick={props.onHide}>Close</Button>
+          <Button variant="danger" onClick={Logout}>Confirm Logout</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+    }
+
+  const Logout=()=>{
+    logout()
+    // setAuthToken()
+    setModalShow(false)
+  }
+  return ( AuthService.loggedIn() ? (
+    <div>
+      <div className="w3-padding-large w3-border w3-center" style={{backgroundColor: "#F26122"}}>
+        <div className="w3-row w3-hide-medium w3-hide-small">
+
+          {/* Show when Screen is Large */}
+          <div className="w3-col s4" style={{paddingRight:"10px", marginTop:"6px"}}>
+            <img src={NMFICLOGO} alt="NMFIC's Logo" style={{borderRadius:"15px 50px 50px 15px"}} />
+          </div>
+          <div className="w3-col s8 w3-text-white w3-wide justify-content-start" >
+            <h3 className="w3-xxlarge">UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
+            {/* <h3 className="w3-xxlarge">AND TECHNOLOGY OF</h3>
+            <h3 className="w3-xxlarge">SOUTHERN PHILIPPINES</h3> */}
+            <h3  >Data Management System</h3>
           </div>
         </div>
-        {/* <img className="w3-image" src={photographer} alt="Me" width="1500" height="300"/> */}
+
+          {/* Show when Screen is Medium */}
+          <div className="w3-hide-large w3-hide-small w3-text-white" style={{whiteSpace: "nowrap"}}>
+                <h4>NORTHERN MINDANAO</h4>
+                <h4>FOOD INNOVATION CENTER</h4>
+          </div>
+
+          {/* Show when Screen is Small */}
+          <div className="w3-hide-large w3-hide-medium w3-text-white" style={{whiteSpace: "nowrap"}}>
+            <h6 >NORTHERN MINDANAO</h6>
+            <h6>FOOD INNOVATION CENTER</h6>
+          </div>
+      </div>
+            
         
-     
-            <header className="w3-display-container w3-content w3-center" style={{maxWidth: "1500px"}}>
-
-              <div className="w3-bar w3-light-grey w3-round w3-display-bottommiddle w3-hide-small" style={{bottom:"-20px"}}>
-                
-                <NavLink to="/" className="w3-bar-item w3-button" >
-                    Home
-                </NavLink>
-                <NavLink to="/customers" className="w3-bar-item w3-button" >
-                    Customers
-                </NavLink>
-                <NavLink to="/sessions" className="w3-bar-item w3-button" >
-                    Sessions
-                </NavLink>
-                <NavLink to='/login'  >
-                    <button onClick={()=> {
-                        props.logout()
-                        AuthService.logout()
-                        }} className="w3-bar-item w3-text-black w3-button">Logout</button>
-                </NavLink>
-              </div>
-              <div className="w3-center w3-light-grey w3-padding-16 w3-hide-large w3-hide-medium">
-                <div className="w3-bar w3-light-grey">
-                    <NavLink to="/" className="w3-bar-item w3-button" >
-                        Home
-                    </NavLink>
-                    <NavLink to="/customers" className="w3-bar-item w3-button" >
-                        Customers
-                    </NavLink>
-                    <NavLink to="/sessions" className="w3-bar-item w3-button" >
-                        Sessions
-                    </NavLink>
-                    <button onClick={()=> {
-                        props.logout()
-                        AuthService.logout()
-                        console.log(props.history)
-                        props.history.push('/login')
-                        }} className="w3-bar-item w3-button"> Logout </button>
-                </div>
-              </div>
-
-            {/* <div className="w3-bar w3-light-grey w3-round w3-display-bottommiddle w3-hide-small" style={{bottom:"-20px"}}>
-              <a href="/" className="w3-bar-item w3-button">Home</a>
-              <a href="/customers" className="w3-bar-item w3-button">Customers</a>
-              <a href="/sessions" className="w3-bar-item w3-button">Sessions</a>
-            </div> */}
-            </header>
-           
-
-    <br/>
-    </div>
-        )
-    }
-    export const HeaderNotLoggedIn = props => {
+            <Navbar className="w3-display-container w3-center w3-hide-small w3-hide-medium" style={{maxWidth: "1500px",}}>
+              <Nav 
+              className="w3-bar w3-light-grey w3-round w3-display-bottommiddle" 
+              style={{bottom:"-13px", boxShadow:"0 4px 8px rgb(0,0,0,0.2), 0 16px 32px rgb(0,0,0,0.1)",}}>
+                  <NavLink className="w3-bar-item" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Customers</NavLink>
+                  <NavLink className="w3-bar-item" to="/sessions"   style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Sessions</NavLink>
+                <NavLink className="w3-bar-item" to="/users"  style={location.pathname==='/users'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Users</NavLink>
+                  <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item"  style={{color:"gray"}}>Logout</NavLink>
+              </Nav>
+              <MyVerticallyCenteredModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+              />
+            </Navbar>
+          {/* <AuthContext.Consumer>
+          {(value) => (value.userProfile.is_superuser ?<a href="/users" className="w3-bar-item w3-button" >
+                Users
+            </a>: null
+          )}
+          </AuthContext.Consumer> */}
+        
+        <Navbar className=" w3-display-container w3-center w3-hide-large" style={{maxWidth: "1500px",}}>
+          <Nav className="w3-light-grey w3-display-bottommiddle w3-round" 
+            style={{bottom:"-22px", boxShadow:"4px 4px 8px 4px rgb(0,0,0,0.2), 16px 16px 32px 16px rgb(0,0,0,0.1)"}}>
+        
+            
+            <NavLink className="w3-bar-item w3-margin" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>
+                Customers
+            </NavLink>
+            <NavLink className="w3-bar-item w3-margin" to="/sessions" style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>
+                Sessions
+            </NavLink>
+            <NavLink className="w3-bar-item w3-margin" to="/users"   style={location.pathname==='/users'?{ fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Users</NavLink>
+            <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item w3-margin" style={{color:"gray"}}>Logout</NavLink>
+          </Nav>
+        </Navbar>
+      <br/>
+    </div>) : null )
     
-        return(
-            
-        <div>
-        <div className="w3-padding-large w3-border w3-wide w3-amber w3-text-light-grey w3-center">
-          <div className="w3-row ">
-            <div className="w3-col s2 w3-center w3-hide-small">Logo</div>
-            <div className="w3-col s10 w3-center">
-            {/* Show when Large */}
-              <h2 className="w3-hide-medium w3-hide-small w3-xxxlarge">NORTHERN MINDANAO</h2>
-              <h2 className="w3-hide-medium w3-hide-small w3-xxxlarge">FOOD INNOVATION CENTER</h2>
-              {/* Show when Medium */}
-
-              <h4 className="w3-hide-large w3-hide-large w3-hide-small" style={{whiteSpace: "nowrap"}}>NORTHERN MINDANAO</h4>
-              <h4 className="w3-hide-large w3-hide-large w3-hide-small" style={{whiteSpace: "nowrap"}}>FOOD INNOVATION CENTER</h4>
-              {/* Show only when Large */}
-              <h3 className="w3-hide-medium w3-hide-small">Data Management System</h3>
-            </div> 
-              <h6 className="w3-hide-large w3-hide-medium" style={{whiteSpace: "nowrap"}}>NORTHERN MINDANAO</h6>
-              <h6 className="w3-hide-large w3-hide-medium" style={{whiteSpace: "nowrap"}}>FOOD INNOVATION CENTER</h6>
-          </div>
-        </div>
-        {/* <img className="w3-image" src={photographer} alt="Me" width="1500" height="300"/> */}
-        
-     
-            <header className="w3-display-container w3-content w3-center" style={{maxWidth: "1500px"}}>
-
-              <div className="w3-bar w3-light-grey w3-round w3-display-bottommiddle w3-hide-small" style={{bottom:"-20px"}}>
-                <a href="/login" className="w3-bar-item w3-button">login</a>
-                <a href="/signup" className="w3-bar-item w3-button">Register</a>
-
-              </div>
-              <div className="w3-center w3-light-grey w3-padding-16 w3-hide-large w3-hide-medium">
-                <div className="w3-bar w3-light-grey">
-                  <a href="/login" className="w3-bar-item w3-button">login</a>
-                  <a href="/signup" className="w3-bar-item w3-button">Register</a>
-                </div>
-              </div>
-
-            {/* <div className="w3-bar w3-light-grey w3-round w3-display-bottommiddle w3-hide-small" style={{bottom:"-20px"}}>
-              <a href="/" className="w3-bar-item w3-button">Home</a>
-              <a href="/customers" className="w3-bar-item w3-button">Customers</a>
-              <a href="/sessions" className="w3-bar-item w3-button">Sessions</a>
-            </div> */}
-            </header>
-           
-
-    <br/>
-    </div>
-        )
-    }
- 
+      }
+    

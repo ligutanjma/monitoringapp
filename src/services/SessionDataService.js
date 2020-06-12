@@ -1,7 +1,10 @@
 import axios from 'axios';
 const CancelToken = axios.CancelToken
 let cancel;
-const URL = 'https://shielded-fjord-98167.herokuapp.com/'
+// const URL = 'https://shielded-fjord-98167.herokuapp.com/'
+// const URL = 'http://192.168.1.8:8000/'
+const URL = 'http://127.0.0.1:8000/' // API server domain
+
 class SessionDataService {
     state = {
       cancelToken: new CancelToken(function executor(c) {
@@ -9,33 +12,6 @@ class SessionDataService {
       cancel = c;
     })
   }
-    // getCurrent(headers) {
-    //   return axios.get(`http://${URL}:8000/api/sessions/current/`, headers);
-    // }
-    // getStarted(headers) {
-    //   return axios.get(`http://${URL}:8000/api/sessions/started/`, headers);
-
-    // }
-
-    // getAll(headers) {
-    //   return axios.get(`http://${URL}:8000/api/sessions/`, headers);
-    // }
-  
-    // get(id) {
-    //   return axios.get(`http://${URL}:8000/api/sessions/${id}`);
-    // }
-  
-    // create(data, headers) {
-    //   return axios.post(`http://${URL}:8000/api/sessions/`, data, headers);
-    // }
-  
-    // update(id, data, headers) {
-    //   return axios.put(`http://${URL}:8000/api/sessions/${id}/`, data, headers);
-    // }
-  
-    // delete(id) {
-    //   return axios.delete(`http://${URL}:8000/api/sessions/${id}/`);
-    // }
     getCurrent(headers) {
       return axios.get(`${URL}api/sessions/current/`, headers);
     }
@@ -57,7 +33,7 @@ class SessionDataService {
     }
   
     update(id, data, headers) {
-      return axios.put(`${URL}api/sessions/${id}/`, data, headers);
+      return axios.patch(`${URL}api/sessions/${id}/`, data, headers);
     }
   
     delete(id) {

@@ -1,13 +1,26 @@
 {
-  "name": "test",
+  "name": "nmfic",
+  "productName": "NMFIC's DBMS",
+  "description": "Database management system for NMFIC's client records",
+  "author": {
+    "name": "SNEL",
+    "email": "ligutanjm@yahoo.com",
+    "url": "https://www.facebook.com/emligutan"
+  },
+  "build": {
+    "appId": "org.thesis.softeng.app",
+    "productName": "NMFIC's DBMS",
+    "files": [
+      "./build/**/*",
+      "./src/electron-starter.js"
+    ],
+    "extends": null
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
     "jwt-decode": "^2.2.0",
@@ -18,18 +31,27 @@
     "react-bootstrap": "^1.0.0",
     "react-bootstrap-table-next": "^4.0.0",
     "react-bootstrap-table2-filter": "^1.3.1",
+    "react-bootstrap-table2-paginator": "^2.1.2",
     "react-bootstrap-table2-toolkit": "^2.1.2",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.13.0",
+    "react-icons": "^3.10.0",
     "react-plotly.js": "^2.4.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0"
   },
+  "main": "./src/electron-starter.js",
+  "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "BROWSER=none nf start -p 3000",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-start": "node src/electron-wait-react",
+    "react-start": "react-scripts start",
+    "pack": "build --dir",
+    "dist:windows": "electron-builder --windows"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,5 +67,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^9.0.0",
+    "foreman": "^3.0.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2"
   }
 }

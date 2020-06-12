@@ -4,34 +4,31 @@ let cancel;
 // const URL = 'https://shielded-fjord-98167.herokuapp.com'
 // const URL = 'http://192.168.1.8:8000'
 const URL = 'http://127.0.0.1:8000' // API server domain
-
-class CustomerDataService {
+class UserDataService {
     state = {
       cancelToken: new CancelToken(function executor(c) {
       // An executor function receives a cancel function as a parameter
       cancel = c;
     })
   }
-    
-    
     getAll(headers) {
-      return axios.get(`${URL}/api/customers/`, headers);
+      return axios.get(`${URL}/api/users/`, headers);
     }
   
     get(id) {
-      return axios.get(`${URL}/api/customers/${id}`);
+      return axios.get(`${URL}/api/users/${id}`);
     }
   
     create(data, headers) {
-      return axios.post(`${URL}/api/customers/`, data, headers);
+      return axios.post(`${URL}/api/users/`, data, headers);
     }
   
     patch(id, data, headers) {
-      return axios.patch(`${URL}/api/customers/${id}/`, data, headers);
+      return axios.patch(`${URL}/api/users/${id}/`, data, headers);
     }
   
     delete(id) {
-      return axios.delete(`${URL}/api/customers/${id}/`);
+      return axios.delete(`${URL}/api/users/${id}/`);
     }
     
     // deleteAll() {
@@ -47,4 +44,4 @@ class CustomerDataService {
     }
   }
   
-  export default new CustomerDataService();
+  export default new UserDataService();
