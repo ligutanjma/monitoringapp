@@ -73,7 +73,7 @@ const LandingPage = (props) => {
     }
     
     return ( 
-        <div style={{ display: "table", position: "absolute", height: "100%", width :"100%"}}>
+        <div className="diagonal-split-background" style={{ display: "table", position: "absolute", height: "100%", width :"100%", overflow:"hidden"}}>
             <div style={{ display:"table-cell", verticalAlign: "middle" }}>
 
                 <Container>
@@ -129,7 +129,7 @@ const LandingPage = (props) => {
                                         variant="light"
                                         disabled={isLoading}
                                         block
-                                        style={{backgroundColor: "#D4490D", color: "white"}}
+                                        style={{backgroundColor: "#F26122", color: "white"}}
                                     >
                                         {isLoading ? 'Loading...' : 'Log In'}
                                     </Button>

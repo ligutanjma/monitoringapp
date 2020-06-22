@@ -30,7 +30,10 @@ class UserDataService {
     delete(id) {
       return axios.delete(`${URL}/api/users/${id}/`);
     }
-    
+    filter(start,end, headers) {
+      return axios.get(`${URL}/api/users/filtered/${start}/${end}/`, headers);
+
+    }
     // deleteAll() {
     //   return axios.delete(`https://jsonplaceholder.typicode.com/users`);
     // }
