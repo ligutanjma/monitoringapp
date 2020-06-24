@@ -7,13 +7,14 @@ import LandingPage from './components/LandingPage'
 import PrivateRoute from './components/PrivateRoute'
 import { AuthContext } from './components/auth'
 import {
-  HashRouter as Router,
+  BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
 import AuthService from "./services/AuthService";
 import {Header} from "./views/header"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {FormContainer} from './reusable/FormContainer'
 
 const App = () => {
 
@@ -51,6 +52,7 @@ const App = () => {
             <PrivateRoute path="/users/update" component={UpdateUser} />
             <PrivateRoute path="/users" component={UserPage} />
             <Route path="/" component={LandingPage} />
+            {/* <Route path="/" component={AddForm} /> */}
           </Switch>
         </Router>
     </AuthContext.Provider>

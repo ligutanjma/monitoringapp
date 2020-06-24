@@ -411,18 +411,15 @@ const CurrentSessions = (props) => {
     return ( 
         <div className="w3-row">
             <div className="w3-container">
-                        <div className="w3-container  w3-center w3-hide-medium w3-hide-small" style={{display:"flex",}}>
-                            <div className="w3-col w3-margin">
+                        <div className="w3-container w3-margin  w3-center w3-hide-medium w3-hide-small" style={{display:"flex",}}>
+                            <div className="w3-col ">
                                 <ListGroup horizontal>
                                         <ListGroup.Item> {props.location.state.product_name} </ListGroup.Item>
-                                        <ListGroup.Item> {props.location.state.process_name} </ListGroup.Item>
-                                        <ListGroup.Item> {props.location.state.session_name} </ListGroup.Item>
                                         <ListGroup.Item> {props.location.state.required_temp}(°C)</ListGroup.Item>
                                         <ListGroup.Item> {props.location.state.holding_time} </ListGroup.Item>
-                                        <ListGroup.Item> {props.location.state.operator} </ListGroup.Item>
                                 </ListGroup>
                             </div>
-                                    <div className="w3-card-2 w3-margin"  style={{display:"flex", alignItems:"flex-end"}}>
+                                    <div className="w3-card"  style={{display:"flex", alignItems:"flex-end"}}>
 
                                         <OverlayTrigger
                                             placement="top"
