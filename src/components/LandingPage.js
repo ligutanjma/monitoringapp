@@ -36,6 +36,7 @@ const LandingPage = (props) => {
         AuthService.login(username, password)
         .then(res => {
         setIsLoading(false)
+        console.log(res.data)
         setUserProfile(res.data)
         // setAuthTokens(res.data.token); // Setting the token in localStorage
         })

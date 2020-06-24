@@ -30,7 +30,7 @@ export const ButtonField = ({buttonStyle,buttonSize,type, children, etc, onClick
         </button>
     );
 }
-export const ButtonIconField = ({buttonStyle,buttonSize,tips, children })=> {
+export const ButtonIconField = ({buttonStyle,buttonSize,tips, children, style, onClick })=> {
     const checkButtonStyle = STYLES.includes(buttonStyle) ? buttonStyle: STYLES[0];
     const checkButtonSize = SIZES.includes(buttonSize) ? buttonSize: SIZES[0];
 
@@ -46,8 +46,10 @@ export const ButtonIconField = ({buttonStyle,buttonSize,tips, children })=> {
             }
         >
             <button
+                style={style}
                 className={`w3-card ${checkButtonStyle} ${checkButtonSize}`}
                 type='button'
+                onClick={onClick}
             >
                 {children}
             </button>
