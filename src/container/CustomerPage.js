@@ -482,6 +482,7 @@ export const AddCustomer = (props) => {
         'Authorization': 'JWT ' + authTokens
       }
     }
+    console.log(data, options)
     CustomerDataService.create(data, options)
       .then(response => {
         // props.history.push('/sessions/current', response.data)
@@ -491,6 +492,7 @@ export const AddCustomer = (props) => {
       })
       .catch(e => {
         console.log(e)
+        console.log(e.response)
         try{
           setErrMessage(e.response.data.customer_name[0])
         }catch{

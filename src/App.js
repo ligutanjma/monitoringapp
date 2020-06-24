@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import {SessionPage, AddSessions } from './container/SessionPage';
 import CurrentSession from './container/CurrentSessionContainer2'
-import {CustomerPage, AddCustomer, UpdateCustomer,} from './container/CustomerPage'
+import {CustomerPage, AddCustomer, UpdateCustomer} from './container/CustomerPage'
 import {UserPage, AddUser, UpdateUser} from './container/UserPage'
+import {AuditCustomer, AuditSession, AuditUser} from './container/AuditLogs'
 import LandingPage from './components/LandingPage'
 import PrivateRoute from './components/PrivateRoute'
 import { AuthContext } from './components/auth'
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
@@ -42,12 +43,15 @@ const App = () => {
         <Router>
           <Header/>
           <Switch>
+            <PrivateRoute path="/customers/audit" component={AuditCustomer} />
             <PrivateRoute path="/customers/create" component={AddCustomer} />
             <PrivateRoute path="/customers/update" component={UpdateCustomer} />
             <PrivateRoute path="/customers" component={CustomerPage} />
+            <PrivateRoute path="/sessions/audit" component={AuditSession}/>
             <PrivateRoute path="/sessions/current" component={CurrentSession}/>
             <PrivateRoute path="/sessions/create" component={AddSessions} />
             <PrivateRoute path="/sessions" component={SessionPage} />
+            <PrivateRoute path="/users/audit" component={AuditUser} />
             <PrivateRoute path="/users/create" component={AddUser} />
             <PrivateRoute path="/users/update" component={UpdateUser} />
             <PrivateRoute path="/users" component={UserPage} />

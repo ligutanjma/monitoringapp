@@ -13,8 +13,9 @@ const columns = [{
     dataField:"date_joined",
     text:"Date",
     sort:true,
+    searchable:false,
     headerStyle: (column, colIndex)=>{
-      return {color:"#007bff", textAlign:"center"}},
+      return {textAlign:"center"}},
        
     },{
     dataField: 'id',
@@ -42,26 +43,7 @@ const columns = [{
       sort: true,
 
     }];
-const small_screen_columns = [{
-        dataField: 'id',
-        text: 'ID',
-        hidden: true
-        }, {
-          dataField: 'username',
-          text: 'Username',
-          sort: true,
-          headerStyle: (column, colIndex)=>{
-            return {color:"#007bff", textAlign:"center"}
-          }
-        },{
-          dataField: 'last_name',
-          text: 'Last Name',
-          sort: true,
-          headerStyle: (column, colIndex)=>{
-            return {color:"#007bff", textAlign:"center"}
-          }
-    
-        }];
+
 
 export const UserPage = (props)=>{
     const [loading, setLoading] = useState(false);
@@ -78,6 +60,7 @@ export const UserPage = (props)=>{
       setLoading(true)
       UserDataService.getAll(options)
         .then(response => {
+          console.log(response.data)
           setData(response.data)
           setUsers(response.data.results)
           setLoading(false)
@@ -103,7 +86,7 @@ export const UserPage = (props)=>{
         console.log(err);
       })
     }
-    return <TableContainer tips="Add User" data= {users} count={data.count} columns={columns} filterByDate={handleFilter} />
+    return <TableContainer tips="Add User" data= {users.reverse()} count={data.count} columns={columns} filterByDate={handleFilter} />
 
 }
 

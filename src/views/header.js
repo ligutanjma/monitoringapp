@@ -59,7 +59,7 @@ export const Header = props => {
             <img src={NMFICLOGO} alt="NMFIC's Logo" style={{borderRadius:"15px 50px 50px 15px"}} />
           </div>
           <div className="w3-col s8 w3-text-white w3-wide justify-content-start" >
-            <h3 className="w3-xxlarge">UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
+            <h3 className="w3-xxlarge ">UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
             {/* <h3 className="w3-xxlarge">AND TECHNOLOGY OF</h3>
             <h3 className="w3-xxlarge">SOUTHERN PHILIPPINES</h3> */}
             <h3  >Data Management System</h3>
@@ -84,10 +84,10 @@ export const Header = props => {
               <Nav 
               className="w3-bar w3-light-grey w3-round w3-display-bottommiddle" 
               style={{bottom:"-10px", boxShadow:"0 4px 8px rgb(0,0,0,0.2), 0 16px 32px rgb(0,0,0,0.1)",}}>
-                  <NavLink className="w3-bar-item" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Customers</NavLink>
-                  <NavLink className="w3-bar-item" to="/sessions"   style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Sessions</NavLink>
-                <NavLink className="w3-bar-item" to="/users"  style={location.pathname==='/users'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Users</NavLink>
-                  <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item"  style={{color:"gray"}}>Logout</NavLink>
+                  <NavLink className="w3-bar-item" to="/customers"  style={location.pathname==='/customers' || location.pathname.indexOf("customers")!==-1?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Customers</NavLink>
+                  <NavLink className="w3-bar-item" to="/sessions"   style={location.pathname==='/sessions'  || location.pathname.indexOf("sessions")!==-1?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Sessions</NavLink>
+                  <NavLink className="w3-bar-item" to="/users"  style={location.pathname==='/users'  || location.pathname.indexOf("users")!==-1?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Users</NavLink>
+                  <button onClick={()=> setModalShow(true)} className="w3-bar-item"  style={{color:"gray",fontWeight:"bold"}}>Logout</button>
               </Nav>
               <MyVerticallyCenteredModal
                 show={modalShow}
@@ -105,15 +105,14 @@ export const Header = props => {
           <Nav className="w3-light-grey w3-display-bottommiddle w3-round" 
             style={{bottom:"-22px", boxShadow:"4px 4px 8px 4px rgb(0,0,0,0.2), 16px 16px 32px 16px rgb(0,0,0,0.1)"}}>
         
-            
-            <NavLink className="w3-bar-item w3-margin" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>
+            <NavLink className="w3-bar-item w3-margin" to="/customers"  style={location.pathname==='/customers' || location.pathname.indexOf("customers")!==-1?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>
                 Customers
             </NavLink>
-            <NavLink className="w3-bar-item w3-margin" to="/sessions" style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>
+            <NavLink className="w3-bar-item w3-margin" to="/sessions" style={location.pathname==='/sessions'  || location.pathname.indexOf("sessions")!==-1?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>
                 Sessions
             </NavLink>
-            <NavLink className="w3-bar-item w3-margin" to="/users"   style={location.pathname==='/users'?{ fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Users</NavLink>
-            <NavLink onClick={()=> setModalShow(true)} className="w3-bar-item w3-margin" style={{color:"gray"}}>Logout</NavLink>
+            <NavLink className="w3-bar-item w3-margin" to="/users"   style={location.pathname==='/users'  || location.pathname.indexOf("users")!==-1?{ fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Users</NavLink>
+            <button onClick={()=> setModalShow(true)} className="w3-bar-item" style={{color:"gray",fontWeight:"bold", border:"none"}}>Logout</button>
           </Nav>
         </Navbar>
       <br/>
