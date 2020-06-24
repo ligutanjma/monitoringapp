@@ -6,7 +6,6 @@ import NMFICLOGO from '../assets/NMFICLOGO.jpg'
 import { useAuth } from '../components/auth'
 
 import { Navbar, Nav} from 'react-bootstrap'
-import {ButtonField} from '../reusable/Button/ButtonField'
 
 export const Header = props => {
   const { logout } = useAuth()
@@ -33,12 +32,8 @@ export const Header = props => {
           
         </Modal.Body>
         <Modal.Footer>
-          <ButtonField buttonStyle="btns-cancel" onClick={props.onHide}>
-                        Close
-          </ButtonField>
-          <ButtonField buttonStyle="btns-primary" onClick={Logout}>
-            Confirm Logout
-          </ButtonField>
+          <Button variant="outline-dark" onClick={props.onHide}>Close</Button>
+          <Button variant="danger" onClick={Logout}>Confirm Logout</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -83,7 +78,7 @@ export const Header = props => {
             <Navbar className="w3-display-container w3-center w3-hide-small w3-hide-medium" style={{maxWidth: "1500px",}}>
               <Nav 
               className="w3-bar w3-light-grey w3-round w3-display-bottommiddle" 
-              style={{bottom:"-10px", boxShadow:"0 4px 8px rgb(0,0,0,0.2), 0 16px 32px rgb(0,0,0,0.1)",}}>
+              style={{bottom:"-13px", boxShadow:"0 4px 8px rgb(0,0,0,0.2), 0 16px 32px rgb(0,0,0,0.1)",}}>
                   <NavLink className="w3-bar-item" to="/customers"  style={location.pathname==='/customers'?{fontWeight:"bold", color:"#007bff"}: {color:"gray"}}>Customers</NavLink>
                   <NavLink className="w3-bar-item" to="/sessions"   style={location.pathname==='/sessions'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Sessions</NavLink>
                 <NavLink className="w3-bar-item" to="/users"  style={location.pathname==='/users'?{fontWeight:"bold",  color:"#007bff"}: {color:"gray"}}>Users</NavLink>

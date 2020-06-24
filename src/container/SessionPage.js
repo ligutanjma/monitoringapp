@@ -14,10 +14,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import {FaSearch} from 'react-icons/fa'
 import {AiOutlinePlus, AiOutlineDelete} from 'react-icons/ai'
 import { InputGroup, FormControl} from 'react-bootstrap';
-import TableContainer from '../reusable/TableContainer'
-import {FormContainer} from '../reusable/FormContainer'
-import {ButtonField} from '../reusable/Button/ButtonField'
-import InputField from '../reusable/InputField'
+
 
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { dateFilter,Comparator } from 'react-bootstrap-table2-filter';
@@ -32,6 +29,11 @@ const columns = [
     headerStyle: (column, colIndex)=>{
       return {color:"#007bff", width:"300px", textAlign:"center"}
     },
+    filter: dateFilter({
+      delay: 400,
+      withoutEmptyComparatorOption: true,
+      comparators: [Comparator.EQ, Comparator.GT, Comparator.LT]
+    })
   },
   {
   dataField: 'pk',
@@ -328,7 +330,6 @@ const SessionList = (props) => {
 }
 export const AddSessions = (props) => {
   const aRef = React.useRef()
-  const [date, setDate] = useState("")
   const [product_name, setProduct_name] = useState("")
   const [process_name, setProcess_name] = useState("")
   const [session_name, setSession_name] = useState("")
@@ -369,11 +370,11 @@ export const AddSessions = (props) => {
         </Modal.Header>
         <Modal.Body>
           <h4>Are you sure you want to cancel?</h4>
-          <code>Values in the field might not be saved.</code>       
+          <p>Values in the field might not be saved.</p>       
         </Modal.Body>
         <Modal.Footer>
-          <ButtonField buttonStyle="btns-cancel" onClick={handleConfirmClose}>Close</ButtonField>
-          <ButtonField buttonStyle="btns-primary" onClick={confirmCancel}>Confirm Cancel</ButtonField>
+          <Button onClick={handleConfirmClose}>Close</Button>
+          <Button onClick={confirmCancel} variant="outline-danger">Confirm Cancel</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -396,7 +397,6 @@ export const AddSessions = (props) => {
   
   const saveSession =()=>{
     var data = {
-      "date" : date,
       "product_name": product_name,
       "process_name": process_name,
       "session_name": session_name,
@@ -430,17 +430,20 @@ export const AddSessions = (props) => {
   }
 
   return (
-    <FormContainer formType="SESSION DETAILS">
+    <div className="w3-container" style={{width:"500px",margin:"auto", paddingTop: "10px"}}>
+
+              <br />
+              <div className="w3-row" >
+
+                <h2 className="w3-text-white" style={{textAlign: "center", margin: "0 0 15px", textShadow:"2px 2px 4px #000000"}}>SESSION DETAILS</h2>
+              </div>
+              <div className="row">
+                <div className="w3-container" style={{width:"500px",  borderColor: "lightgrey", borderWidth : "1px", borderStyle: "solid", padding : "10px", 
+              boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1),"}}>
+                
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                   
-                <InputField 
-                  name="date" 
-                  label="Date:"
-                  value={date}
-                  type="date"
-                  onChange={e=> setDate(e.target.value)}
-                  etc={{disabled:false, required: true}}
-                />
+                  
                   <Form.Group  controlId="FormProductName" >
                     <Form.Label column="md">
                       Product Name:
@@ -561,10 +564,9 @@ export const AddSessions = (props) => {
 
                   <Row className="mx-auto">
                     <Col >
-                      <ButtonField buttonStyle="btns-cancel" buttonSize="btns-medium" onClick={handleConfirmShow}>Cancel</ButtonField>
+                      <Button onClick={handleConfirmShow} variant="danger">Cancel</Button>
 
-                      <ButtonField buttonStyle="btns-primary" buttonSize="btns-medium"type="submit">Save</ButtonField>
-
+                      <Button className="px-4 mx-4" variant="outline-success" type="submit">Save</Button>
                       {/* <Button variant="outline-primary" onClick={(event)=> handleSubmit(event)} block>Save</Button> */}
                     </Col>
                   </Row>
@@ -623,22 +625,27 @@ export const AddSessions = (props) => {
                     
                     {isLoading ? <Spinner style={{ marginLeft :"20px"}} animation="grow" variant="warning" /> : (
                       <>
-                      <ButtonField buttonStyle="btns-cancel" onClick={handleClose}>Close</ButtonField>
-
-                    <ButtonField
-                      buttonStyle="btns-primary"
-                      etc={{ disabled: isLoading}}
+                    <Button variant="danger" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button
+                      variant="success"
+                      disabled={isLoading}
                       onClick={!isLoading ? handleClick : null}
                     >
                       Save Session
-                    </ButtonField>
+                    </Button>
                     </>
                     )
                     }
 
                   </Modal.Footer>
                 </Modal>
-    </FormContainer>
+                </div>
+                
+              </div>
+              <br />
+            </div>
     
   )
 }
@@ -673,24 +680,10 @@ export const SessionPage = (props)=>{
       return ()=> SessionDataService.cancelToken()
   },[authTokens])
 
-  const handleFilter = (start, end)=> {
-    setLoading(true)
-    SessionDataService.filter(start, end, options)
-    .then(response=> {
-      console.log(response.data)
-      setData(response.data)
-      setSessions(response.data.results)
-      setLoading(false)
-
-    })
-    .catch(err=> {
-      setLoading(false)
-      console.log(err);
-    })
-  }
+  
 
 
-  return <TableContainer tips="Add Session" data= {sessions} count={data.count} columns={columns} filterByDate={handleFilter}/>
+  return <SessionList loading={loading} sessions= {sessions} data={data} prop={props}/>
     
   
 }

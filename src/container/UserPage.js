@@ -5,17 +5,19 @@ import {DataList} from '../components/DataList'
 import filterFactory, { dateFilter,Comparator } from 'react-bootstrap-table2-filter';
 import { Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
-import TableContainer from '../reusable/TableContainer'
-import {ButtonField} from '../reusable/Button/ButtonField'
-import {FormContainer} from '../reusable/FormContainer'
 
 const columns = [{
     dataField:"date_joined",
-    text:"Date",
+    text:"Date Created",
     sort:true,
     headerStyle: (column, colIndex)=>{
-      return {color:"#007bff", textAlign:"center"}},
-       
+      return {color:"#007bff", textAlign:"center"}
+    },
+    filter: dateFilter({
+      delay: 400,
+      withoutEmptyComparatorOption: true,
+      comparators: [Comparator.EQ, Comparator.GT, Comparator.LT]
+    })
     },{
     dataField: 'id',
     text: 'ID',
@@ -88,23 +90,9 @@ export const UserPage = (props)=>{
         });
         return ()=> UserDataService.cancelToken()
     },[])
-    const handleFilter = (start, end)=> {
-      setLoading(true)
-      UserDataService.filter(start, end, options)
-      .then(response=> {
-        console.log(response.data)
-        setData(response.data)
-        setUsers(response.data.results)
-        setLoading(false)
-  
-      })
-      .catch(err=> {
-        setLoading(false)
-        console.log(err);
-      })
-    }
-    return <TableContainer tips="Add User" data= {users} count={data.count} columns={columns} filterByDate={handleFilter} />
-
+    return(
+        <DataList name="User" placeholder="Username / First Name / Last Name" loading={loading} columns={columns} small_screen_columns={small_screen_columns} data= {users} prop={props} count={data.count}/>
+    )
 }
 
 export const AddUser = (props) => {
@@ -198,8 +186,17 @@ export const AddUser = (props) => {
   
     }
   return (
-    <FormContainer formType="CREATE NEW USER">
-      
+      <AuthContext.Consumer>
+      {  value=> (
+
+          <div className="w3-container" style={{width:"500px",margin:"auto", paddingTop: "10px"}}>
+            <br />
+            <div className="w3-row" >
+              <h2 className="w3-text-white" style={{textAlign: "center", margin: "0 0 15px", textShadow:"2px 2px 4px #000000"}}>Create New User</h2>
+            </div>
+            <div className="w3-row">
+              <div className="w3-container" style={{width:"500px",  borderColor: "lightgrey", borderWidth : "1px", borderStyle: "solid", padding : "10px", 
+              boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1),"}}>
               <Form name="formera" noValidate validated={validated} onSubmit={handleSubmit}>
               
               <Form.Group  controlId="username" >
@@ -297,9 +294,9 @@ export const AddUser = (props) => {
                 <Row className="mx-auto">
                   <Col >
                     <Link to="/users">
-                      <ButtonField buttonStyle="btns-cancel">Cancel</ButtonField>
+                      <Button  variant="danger">Cancel</Button>
                     </Link>
-                    <ButtonField buttonStyle="btns-primary" type="submit">Save</ButtonField>
+                    <Button className="px-4 mx-4" variant="outline-success" type="submit">Save</Button>
                     {/* <Button variant="outline-primary" onClick={(event)=> handleSubmit(event)} block>Save</Button> */}
                   </Col>
                 </Row>
@@ -344,20 +341,26 @@ export const AddUser = (props) => {
                   </Container>
                 </Modal.Body>
                 <Modal.Footer className="justify-content-start mx-2">
-                <ButtonField buttonStyle="btns-cancel" onClick={handleClose}>Close</ButtonField>
                 
-                  
-                  <ButtonField
-                    buttonStyle="btns-primary"
-                    etc={{ disabled: isLoading}}
+                  <Button variant="danger" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button
+                    variant="success"
+                    disabled={isLoading}
                     onClick={!isLoading ? handleClick : null}
                   >
                     {isLoading ? 'Loading…' : 'Add User'}
-                  </ButtonField>
+                  </Button>
                 </Modal.Footer>
               </Modal>
+              </div>
               
-    </FormContainer>
+            </div>
+            <br />
+          </div>
+      )}
+      </AuthContext.Consumer>
   )
 }
 export const UpdateUser = (props) => {
@@ -455,8 +458,18 @@ export const UpdateUser = (props) => {
     }
     
   return (
-    <FormContainer formType="EDIT USER" formTitle={username}>
+      <AuthContext.Consumer>
+      {  value=> (
 
+          <div className="w3-container "  style={{width:"500px",margin:"auto", paddingTop: "10px"}}>
+            <br />
+            <div className="w3-row" >
+              <h3 className="justify-content-center" style={{ textAlign:"center"}}>UPDATE USER: <i style={{ textTransform: "uppercase"}}>{username}</i></h3>
+
+            </div>
+            <div className="w3-row">
+              <div className="w3-container" style={{ borderColor: "lightgrey", borderWidth : "1px", borderStyle: "solid", padding : "10px", 
+              boxShadow:"2px 4px 8px 2px rgb(0,0,0,0.2), 4px 8px 16px 4px rgb(0,0,0,0.1)"}}>
               <Form name="formera" noValidate validated={validated} onSubmit={handleSubmit}>
               {/* <fieldset>
                     <Form.Group className="w3-large">
@@ -582,10 +595,9 @@ export const UpdateUser = (props) => {
                 <Row className="mx-auto">
                   <Col >
                     <Link to="/users">
-                      <ButtonField buttonStyle="btns-cancel">Cancel</ButtonField>
-                      
+                      <Button  variant="danger">Cancel</Button>
                     </Link>
-                    <ButtonField buttonStyle="btns-primary" type="submit">Save</ButtonField>
+                    <Button className="px-4 mx-4" variant="outline-success" type="submit">Save</Button>
                     {/* <Button variant="outline-primary" onClick={(event)=> handleSubmit(event)} block>Save</Button> */}
                   </Col>
                 </Row>
@@ -632,18 +644,25 @@ export const UpdateUser = (props) => {
                 </Modal.Body>
                 <Modal.Footer className="justify-content-start mx-2">
                 
-                  <ButtonField buttonStyle="btns-cancel" onClick={handleClose}>Close</ButtonField>
-                
-                  
-                  <ButtonField
-                    buttonStyle="btns-primary"
-                    etc={{ disabled: isLoading}}
+                  <Button variant="danger" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button
+                    variant="success"
+                    disabled={isLoading}
                     onClick={!isLoading ? handleClick : null}
                   >
-                    {isLoading ? 'Loading…' : 'Add User'}
-                  </ButtonField>
+                    {isLoading ? 'Loading…' : 'Update User'}
+                  </Button>
                 </Modal.Footer>
               </Modal>
-              </FormContainer>
+              </div>
+              <div className="col"></div>
+              
+            </div>
+            <br />
+          </div>
+      )}
+      </AuthContext.Consumer>
   )
 }
