@@ -49,6 +49,7 @@ export const Header = props => {
     // setAuthToken()
     setModalShow(false)
   }
+  console.log(AuthService.loggedIn())
   return ( AuthService.loggedIn() ? (
     <div>
       <div className="w3-padding-large w3-border w3-center" style={{backgroundColor: "#F26122"}}>

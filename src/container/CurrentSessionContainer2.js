@@ -1,5 +1,6 @@
 import React from "react";
 import SessionDataService from "../services/SessionDataService";
+import {HOST_URL} from '../reusable/constants'
 
 import {useAuth} from '../components/auth'
 import {useHistory} from 'react-router-dom'
@@ -13,9 +14,10 @@ import { IoIosWater,  } from 'react-icons/io'
 import { FaRegStopCircle } from 'react-icons/fa'
 
 
+// import { Notification } from "electron";
+// const { Notification } = window.require('electron').remote
 
 const CurrentSessions = (props) => {
-    console.log(props)
     var chartRef;
     const [readings, setReadings] = React.useState({
         temperature:[],
@@ -25,6 +27,7 @@ const CurrentSessions = (props) => {
         temperature:[],
         time: []
     })
+    const [session, setSession] = React.useState({})
     const [WSclose, setWSclose] = React.useState(false)
     const [ws, setWS] = React.useState()
     const [reconTime, setReconTime] = React.useState(250)
@@ -33,20 +36,63 @@ const CurrentSessions = (props) => {
     const [modalInputName, setModalInputName] = React.useState('')
     const [isSlicedReadings, setIsSlicedReadings] = React.useState(false)
     const [renderedSlicedReadingsToGraph, setRenderedSlicedReadingsToGraph] = React.useState(false)
-    const URL = "ws://127.0.0.1:8000/"
+    const [showNotif, setShowNotif] = React.useState(false)
+    const URL = `ws://${HOST_URL}`
     const { authTokens } = useAuth()
     let history = useHistory()
-    
+    // const myNotification = new Notification({
+    //     title:"Temperature Alert",
+    //     body: 'Temperature is closing to the required temperature.',
+    //     timeoutType: 'never',
+    //     urgency: 'critical',
+    //     silent: 'false',
 
+    //   })
+    // React.useEffect(()=>{
+        
+    //     if(readings.temperature[readings.temperature.length-1] >= props.location.state.required_temp - 5 && showNotif===false){
+            
+    //         if(Notification.isSupported()){
+
+    //             setShowNotif(true)
+    //             myNotification.show()
+                
+    //         }
+              
+    //     }
+    // }, [readings, props.location.state.required_temp, showNotif,myNotification])
+    // React.useEffect(()=>{
+    //     if(readings.temperature[readings.temperature.length-1] <= props.location.state.required_temp - 5){
+    //         setShowNotif(false)
+    //         myNotification.close()
+    //     }
+    // }, [readings, props.location.state.required_temp, myNotification])
+    // }, [])
+    var options = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'JWT ' + authTokens
+        }
+      }
+    React.useEffect(()=>{
+        SessionDataService.getCurrent(options)
+        .then(res=> {
+            console.log(res.data.results[0])
+            setSession(res.data.results[0])
+        })
+        .catch(err=> {
+            history.push({pathname: '/sessions'})
+        })
+    },[])
     React.useEffect(()=>{
         
-        if(props.location.state.ended === true){
-            const websocket = new WebSocket(`${URL}ws/equipments/water_retort/A0temp/`)
+        if(session.ended === true){
+            const websocket = new WebSocket(`${URL}/ws/equipments/water_retort/A0temp/`)
             websocket.onopen = () => {
                 console.log('websocket opened')
                 var message = {
                     "type": "slice",
-                    "session_id": props.location.state.pk 
+                    "session_id": session.pk 
                 }
                 websocket.send(JSON.stringify(message))
             }
@@ -78,21 +124,32 @@ const CurrentSessions = (props) => {
             };
         }
         else {
-        const websocket = new WebSocket(`${URL}ws/clients/`);
+        const websocket = new WebSocket(`${URL}/ws/clients/`);
         websocket.onopen = () => {
-            if(props.location.state.started === true){
-                var message = {
+            if(session.started === true){
+                var message_started = {
                     "type": 'started',
-                    "session_id" : props.location.state.pk
+                    "session_id" : session.pk
                 }
                 console.log('this session have already started')
-                websocket.send(JSON.stringify(message))
+                websocket.send(JSON.stringify(message_started))
+            }
+            if(session.current === true){
+                var message_current = {
+                    "type": 'current',
+                    "session_temp" : session.required_temp
+                }
+                console.log('this session just created')
+                websocket.send(JSON.stringify(message_current))
             }
             setWS(websocket)
         };
         websocket.onmessage = response => { 
             // add the new message to state
             var data = JSON.parse(response.data)
+            console.log(data.reading)
+            console.log(data.reading <= session.required_temp - 5);
+            
             var readingsCopy = Object.assign({}, readings);
             // check if the session has already started and if the starting_point to 
             // ending_point readings is already rendered to the graph 
@@ -158,7 +215,7 @@ const CurrentSessions = (props) => {
                 for(var i = 0; i < readings.temperature.length; ++i){
                     // chartRef.chart.config.data.datasets[0].data.push(readings.temperature[i])
                     // chartRef.chart.config.data.labels.push(readings.time[i])
-                    chartRef.chart.config.data.datasets[1].data.push(props.location.state.required_temp)
+                    chartRef.chart.config.data.datasets[1].data.push(session.required_temp)
                 }
                 setRenderedSlicedReadingsToGraph(true)
                 chartRef.chart.update()
@@ -171,7 +228,7 @@ const CurrentSessions = (props) => {
                 chartRef.chart.config.data.datasets[0].data.push(readings.temperature[readings.temperature.length-1])
                 chartRef.chart.config.data.labels.push(readings.time[readings.time.length-1])
                 for(var x = 0; x < chartRef.chart.config.data.labels.length; ++x){
-                    chartRef.chart.config.data.datasets[1].data.push(props.location.state.required_temp)
+                    chartRef.chart.config.data.datasets[1].data.push(session.required_temp)
                 }
                 chartRef.chart.update()
             }
@@ -183,7 +240,7 @@ const CurrentSessions = (props) => {
             for(var y = 0; y < readings.temperature.length; ++y){
                 chartRef.chart.config.data.datasets[0].data.push(readings.temperature[y])
                 chartRef.chart.config.data.labels.push(readings.time[y])
-                chartRef.chart.config.data.datasets[1].data.push(props.location.state.required_temp)
+                chartRef.chart.config.data.datasets[1].data.push(session.required_temp)
             }
             chartRef.chart.update()
         }
@@ -198,7 +255,6 @@ const CurrentSessions = (props) => {
     const check = () => {
         if (!ws || ws.readyState === WebSocket.CLOSED){
             setWSclose(prevState=> !prevState)
-            setReconTime(250)
         }; //check if websocket instance is closed, if so call `connect` function.
     }
     const formatDate=(date, fmt)=> {
@@ -266,7 +322,7 @@ const CurrentSessions = (props) => {
             "starting_point" : formatDate(new Date(Date.now()), '%Y-%M-%d %H:%m:%s'),
             "started" : true
         })
-        SessionDataService.update(props.location.state.pk, to_update, headers).then(response=>{
+        SessionDataService.update(session.pk, to_update, headers).then(response=>{
             history.push({pathname:'/sessions/current',state: response.data})
         })
         .catch((err)=> {
@@ -310,7 +366,7 @@ const CurrentSessions = (props) => {
         })
         // console.log(formatDate(new Date(Date.now()), '%Y-%M-%d %H:%m:%s'))
 
-        SessionDataService.update(props.location.state.pk, to_update, headers).then(response=>{
+        SessionDataService.update(session.pk, to_update, headers).then(response=>{
             history.push({pathname:'/sessions/current',state: response.data})
 
         })
@@ -319,9 +375,9 @@ const CurrentSessions = (props) => {
         })
     }
     const endSession=()=>{
-        if(ws === undefined || readings.time[readings.time.length-1]=== undefined){
-            return
-        }
+        // if(ws === undefined || readings.time[readings.time.length-1]=== undefined){
+        //     return
+        // }
         var confirm = window.confirm('Are you sure you want end the Session?')
         if (confirm === true){
             var headers = {
@@ -339,7 +395,7 @@ const CurrentSessions = (props) => {
             })
             // console.log(formatDate(new Date(Date.now()), '%Y-%M-%d %H:%m:%s'))
     
-            SessionDataService.update(props.location.state.pk, to_update, headers).then(response=>{
+            SessionDataService.update(session.pk, to_update, headers).then(response=>{
                 history.push({pathname:'/sessions'})
             })
             .catch((err)=> {
@@ -414,12 +470,12 @@ const CurrentSessions = (props) => {
                         <div className="w3-container w3-margin  w3-center w3-hide-medium w3-hide-small" style={{display:"flex",}}>
                             <div className="w3-col ">
                                 <ListGroup horizontal>
-                                        <ListGroup.Item> {props.location.state.product_name} </ListGroup.Item>
-                                        <ListGroup.Item> {props.location.state.required_temp}(°C)</ListGroup.Item>
-                                        <ListGroup.Item> {props.location.state.holding_time} </ListGroup.Item>
+                                        <ListGroup.Item> {session.product_name} </ListGroup.Item>
+                                        <ListGroup.Item> {session.required_temp}(°C)</ListGroup.Item>
+                                        <ListGroup.Item> {session.holding_time} </ListGroup.Item>
                                 </ListGroup>
                             </div>
-                                    <div className="w3-card"  style={{display:"flex", alignItems:"flex-end"}}>
+                                    <div className="w3-card"  style={{display:"flex", alignItems:"flex-end", height: "43px"}}>
 
                                         <OverlayTrigger
                                             placement="top"
@@ -497,12 +553,12 @@ const CurrentSessions = (props) => {
                         <div className="w3-display-container w3-mobile w3-margin w3-hide-large w3-hide-small">
                                 <div className="w3-left w3-margin-right">
                                     <ListGroup horizontal>
-                                            <ListGroup.Item> {props.location.state.product_name} </ListGroup.Item>
-                                            <ListGroup.Item> {props.location.state.process_name} </ListGroup.Item>
-                                            <ListGroup.Item> {props.location.state.session_name} </ListGroup.Item>
-                                            <ListGroup.Item> {props.location.state.required_temp}(°C)</ListGroup.Item>
-                                            <ListGroup.Item> {props.location.state.holding_time} </ListGroup.Item>
-                                            <ListGroup.Item> {props.location.state.operator} </ListGroup.Item>
+                                            <ListGroup.Item> {session.product_name} </ListGroup.Item>
+                                            <ListGroup.Item> {session.process_name} </ListGroup.Item>
+                                            <ListGroup.Item> {session.session_name} </ListGroup.Item>
+                                            <ListGroup.Item> {session.required_temp}(°C)</ListGroup.Item>
+                                            <ListGroup.Item> {session.holding_time} </ListGroup.Item>
+                                            <ListGroup.Item> {session.operator} </ListGroup.Item>
                                     </ListGroup>
                                 </div>
                                 <div className="w3-right w3-card-2">
@@ -658,7 +714,7 @@ const CurrentSessions = (props) => {
                             <Chart 
                                 ref={ref=> chartRef = ref}
                                 name={'Required Temperature'} 
-                                required_temp={props.location.state.required_temp.toString()}
+                                required_temp={session.required_temp}
                                 readings={readings}
                                 >
                             </Chart>

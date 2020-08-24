@@ -17,7 +17,7 @@ import {TiArrowBackOutline} from 'react-icons/ti'
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <OverlayTrigger
     placement="top"
-    delay={{ show: 250, hide: 300 }}
+    delay={{ show: 250, hide: 2000 }}
     overlay={
         <Tooltip>
             Filter by Date
@@ -30,7 +30,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
         e.preventDefault();
         onClick(e);
       }}
-      style={{borderRadius:"5px 0 0 5px",borderTop:"0",borderBottom:"0",fontWeight:"bold", backgroundColor:"#F26122", color:"#FFFFFF", borderColor:"lightgrey", borderWidth:".5px", borderRightWidth:"1px", borderRightColor:"lightgrey"}}
+      style={{borderRadius:"0",borderTop:"0",borderBottom:"0",fontWeight:"bold", backgroundColor:"#F26122", color:"#FFFFFF", borderColor:"lightgrey", borderWidth:".5px", borderRightWidth:"1px", borderRightColor:"lightgrey"}}
     >
         <FiFilter size="1.2em"></FiFilter>
     </Button>
@@ -172,7 +172,7 @@ const TableContainer = ({type,title, id, data,count,tips, columns, filterByDate}
                       <AiOutlinePlus size="2em"/>
                   </ButtonIconField>
                 </Link>
-                <ButtonIconField tips="Excel File" buttonStyle="btns-icon" buttonSize="btns-medium" onClick={()=> props.csvProps.onExport()}>
+                <ButtonIconField tips="To Excel" buttonStyle="btns-icon" buttonSize="btns-medium" onClick={()=> props.csvProps.onExport()}>
                     <RiFileExcel2Line size="2em"/>
                 </ButtonIconField>
                 </>
@@ -191,7 +191,7 @@ const TableContainer = ({type,title, id, data,count,tips, columns, filterByDate}
                 <InputGroup.Prepend >
                   <OverlayTrigger
                       placement="top"
-                      delay={{ show: 250, hide: 300 }}
+                      delay={{ show: 250, hide: 2000 }}
                       overlay={
                           <Tooltip>
                               Search
@@ -200,7 +200,7 @@ const TableContainer = ({type,title, id, data,count,tips, columns, filterByDate}
                   >
                     <Button 
                       variant="default" 
-                      style={{color:"#FFFFFF",backgroundColor:"#F26122", borderRadius:"5px 0 0 5px"}}
+                      style={{width:"42.5px",color:"#FFFFFF",backgroundColor:"#F26122", borderRadius:"5px 0 0 5px"}}
                       onClick={()=> document.getElementById("data-list").focus()} >
                       <FaSearch size="1em"></FaSearch>
                     </Button>
@@ -258,7 +258,7 @@ const TableContainer = ({type,title, id, data,count,tips, columns, filterByDate}
                   </Dropdown>) : null }
                   <OverlayTrigger
                       placement="top"
-                      delay={{ show: 250, hide: 300 }}
+                      delay={{ show: 250, hide: 2000 }}
                       overlay={
                           <Tooltip>
                               Clear all Filters
@@ -321,7 +321,7 @@ const TableContainer = ({type,title, id, data,count,tips, columns, filterByDate}
                       <AiOutlinePlus size="2em"/>
                   </ButtonIconField>
                 </Link>
-                <ButtonIconField style={{height:"44px"}}tips="Excel File" buttonStyle="btns-icon" buttonSize="btns-medium" onClick={()=> props.csvProps.onExport()}>
+                <ButtonIconField style={{height:"44px"}} tips="To Excel" buttonStyle="btns-icon" buttonSize="btns-medium" onClick={()=> props.csvProps.onExport()}>
                     <RiFileExcel2Line size="2em"/>
                 </ButtonIconField>
                 </>) : <ButtonIconField
@@ -338,7 +338,7 @@ const TableContainer = ({type,title, id, data,count,tips, columns, filterByDate}
                 <InputGroup.Prepend >
                   <Button 
                     variant="default" 
-                    style={{color:"#FFFFFF",backgroundColor:"#F26122", borderRadius:"5px 0 0 5px"}}
+                    style={{width:"42.5px",color:"#FFFFFF",backgroundColor:"#F26122", borderRadius:"5px 0 0 5px"}}
                     onClick={()=> document.getElementById("data-list").focus()} >
                     <FaSearch size="1em"></FaSearch>
                   </Button>

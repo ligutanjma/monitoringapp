@@ -1,9 +1,8 @@
 import axios from 'axios';
+import {HOST_URL} from '../reusable/constants'
 const CancelToken = axios.CancelToken
+
 let cancel;
-const URL = 'https://shielded-fjord-98167.herokuapp.com'
-// const URL = 'http://192.168.1.8:8000'
-// const URL = 'http://127.0.0.1:8000' // API server domain
 
 class CustomerDataService {
     state = {
@@ -15,26 +14,26 @@ class CustomerDataService {
     
     
     getAll(headers) {
-      return axios.get(`${URL}/api/customers/`, headers);
+      return axios.get(`http://${HOST_URL}/api/customers/`, headers);
     }
   
     get(id) {
-      return axios.get(`${URL}/api/customers/${id}`);
+      return axios.get(`http://${HOST_URL}/api/customers/${id}`);
     }
   
     create(data, headers) {
-      return axios.post(`${URL}/api/customers/`, data, headers);
+      return axios.post(`http://${HOST_URL}/api/customers/`, data, headers);
     }
   
     patch(id, data, headers) {
-      return axios.patch(`${URL}/api/customers/${id}/`, data, headers);
+      return axios.patch(`http://${HOST_URL}/api/customers/${id}/`, data, headers);
     }
   
     delete(id) {
-      return axios.delete(`${URL}/api/customers/${id}/`);
+      return axios.delete(`http://${HOST_URL}/api/customers/${id}/`);
     }
     filter(start,end, headers) {
-      return axios.get(`${URL}/api/customers/filtered/${start}/${end}/`, headers);
+      return axios.get(`http://${HOST_URL}/api/customers/filtered/${start}/${end}/`, headers);
 
     }
     

@@ -1,14 +1,12 @@
 import decode from 'jwt-decode'
 import axios from 'axios'
+import {HOST_URL} from '../reusable/constants'
 class AuthService {
     // Initializing important variables
-    domain = 'https://shielded-fjord-98167.herokuapp.com/api' // API server domain
-    // domain = 'http://127.0.0.1:8000/api' // API server domain
-    
 
     login (username, password){
         // Get a token from api server using the fetch api
-        return axios.post(`${this.domain}/token/`, {
+        return axios.post(`http://${HOST_URL}/api/token/`, {
             "username": username,
             "password": password 
         },{headers: {'Content-Type': 'application/json'}})

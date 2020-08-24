@@ -30,7 +30,7 @@ const columns = [
     text:'Date Created',
     sort:true,
     headerStyle: (column, colIndex)=>{
-      return {color:"#007bff", width:"300px", textAlign:"center"}
+      return {color:"#007bff"}
     },
   },
   {
@@ -44,7 +44,7 @@ const columns = [
   text: 'Product name',
   sort:true,
   headerStyle: (column, colIndex)=>{
-    return {color:"#007bff", textAlign:"center"}
+    return {color:"#007bff", }
   }
 
 }, {
@@ -648,6 +648,7 @@ export const SessionPage = (props)=>{
   const [data, setData] = useState({})
   const [sessions, setSessions] = useState([])
   const { authTokens } = useAuth()
+  let history = useHistory()
   var options = {
     headers: {
       'Content-Type': 'application/json',
@@ -670,6 +671,22 @@ export const SessionPage = (props)=>{
           setErrorMessage("Network Error. Please check your network connection.")
         }
       });
+      SessionDataService.getCurrent(options)
+      .then(response => {
+        console.log(response.data)
+        if(response.data.count === 0){
+          console.log(response.status)
+          setLoading(false)
+          return
+        }
+        setLoading(false)
+        history.push({pathname: '/sessions/current'})
+      })
+      .catch(err=>{
+          console.log("oops")
+          setLoading(false)
+          
+      })
       return ()=> SessionDataService.cancelToken()
   },[authTokens])
 
