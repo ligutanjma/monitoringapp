@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {SessionPage, AddSessions } from './container/SessionPage';
 import CurrentSession from './container/CurrentSessionContainer2'
 import {CustomerPage, AddCustomer, UpdateCustomer} from './container/CustomerPage'
@@ -36,8 +36,17 @@ const App = () => {
     setAuthTokens()
     setUserProfile()
   }
-  
- 
+  const disableRefresh=(e)=>{
+    if((e.which || e.keyCode) === 116 || (e.which || e.keyCode) === 82 ) e.preventDefault();
+  }
+  useEffect(()=>{
+    window.onload = function (){
+      document.onkeydown = function (e) {
+        disableRefresh(e)
+        
+      }
+    }
+  }, [])
   return (
     <AuthContext.Provider value={{ authTokens, userProfile, setUserProfile:setProfile, logout: removeToken, }}>
         <Router>

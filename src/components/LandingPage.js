@@ -1,6 +1,7 @@
 import React, { useState} from 'react';
 import { Button, Container, Card, Form } from 'react-bootstrap'
 import AuthService from '../services/AuthService'
+import SessionDataService from '../services/SessionDataService'
 import {useAuth} from '../components/auth'
 import { useHistory} from 'react-router-dom'
 const LandingPage = (props) => {
@@ -9,7 +10,7 @@ const LandingPage = (props) => {
     const [validated, setValidated] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { setUserProfile } = useAuth()
+    const { authTokens, setUserProfile } = useAuth()
     let history = useHistory()
 
     
@@ -43,6 +44,7 @@ const LandingPage = (props) => {
         .catch(err=>{
             setIsLoading(false)
             setValidated(false)
+            console.log("oops")
             try{
                 setErrorMessage(err.response.data.non_field_errors[0]);
             }catch{
@@ -53,23 +55,7 @@ const LandingPage = (props) => {
         
     }
     if(AuthService.loggedIn()){
-        // SessionDataService.getCurrent(options)
-        // .then(response => {
-        //   console.log(response.data)
-        //   if(response.data.count === 0){
-        //     console.log(response.status)
-        //     setLoading(false)
-        //     setNoCurrentSession(false)
-        //     return
-        //   }
-        //   setLoading(false)
-        //   props.history.push('/sessions/current', response.data.results[0])
-        // })
-        // .catch(err=>{
-        //   setLoading(false)
-        //   setErrMsg(err.message)
-  
-        // })
+        
         history.replace('/customers')
     }
     

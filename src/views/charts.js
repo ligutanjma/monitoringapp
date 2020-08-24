@@ -15,39 +15,74 @@ class Chart extends Component {
                     label: 'Current Readings',
                     data: [0],
                     fill: false,
+                    pointRadius: 0,
+                    lineTension: 0,
+                    borderWidth: 2,
                     backgroundColor: 'rgba(0, 0, 255, 1)',
 					borderColor: 'rgba(0, 0, 255, 1)',
                 },{
                     label: 'Required Temperature',
                     data: [props.required_temp],
                     fill: false,
+                    pointRadius: 0,
+                    lineTension: 0,
+                    borderWidth: 2,
                     backgroundColor: 'rgba(255, 0, 0, 1)',
                     borderColor: 'rgba(255, 0, 0, 1)',
                 }
             ]
 			},
 			options: {
+                responsive: true,
                 animation: {
-                    duration: 200,
+                    duration: 0,
                 },
 				title: {
 					text: 'Chart.js Time Scale'
 				},
 				scales: {
 					xAxes: [{
+                        distribution: 'series',
+                        bounds: 'ticks',
                         display: true,
 						scaleLabel: {
 							display: true,
 							labelString: 'Time'
+                        },
+                        autoSkip: true,
+                        autoSkipPadding: 25,
+                        ticks: {
+                            major: {
+                                enabled: true
+                            }
                         }
                     }],
 					yAxes: [{
+                        type:"linear",
+                        gridLines: {
+							drawBorder: false
+						},
                         display: true,
 						scaleLabel: {
 							display: true,
 							labelString: 'Temperature'
 						}
                     }]
+                },
+                tooltips:{
+                    intersect: false,
+                    mode: 'index',
+                    position: 'nearest',
+                    callbacks: {
+						label: function(tooltipItem, myData) {
+							var label = myData.datasets[tooltipItem.datasetIndex].label || '';
+							if (label) {
+								label += ': ';
+							}
+							label += parseFloat(tooltipItem.value).toFixed(2);
+							return label;
+						}
+					}
                 },
                 annotation: {
                     drawTime: 'beforeDatasetsDraw',
@@ -112,8 +147,6 @@ class Chart extends Component {
 
         }
     }
-
-    
 
     componentDidMount() {
         this.initChart();

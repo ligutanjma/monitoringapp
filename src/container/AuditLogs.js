@@ -5,10 +5,10 @@ import { useAuth } from '../components/auth'
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import TableContainer from '../reusable/TableContainer';
+import {HOST_URL} from '../reusable/constants'
 
-const URL = 'https://shielded-fjord-98167.herokuapp.com/'
 
-// const URL = 'http://127.0.0.1:8000/' // API server domain
+// const HOST_URL = 'http://127.0.0.1:8000/' // API server domain
 const customer_column = [{
     dataField: 'id',
     text: 'Id',
@@ -107,8 +107,9 @@ export const AuditCustomer = (props) => {
               'Authorization': 'JWT ' + authTokens
             }
         }
-        axios.get(`${URL}api/customers/audit/`, option)
+        axios.get(`${HOST_URL}/api/customers/audit/`, option)
         .then(res=> {
+            console.log(res.data)
             var customers = res.data.results
             var rows = []
             var id = 0
@@ -127,10 +128,10 @@ export const AuditCustomer = (props) => {
                     
                 })
             })
-            
+            console.log(id)
             setValues({
                 ...values,
-                count : res.data.count,
+                count : id,
                 customers: rows
             })
         })
@@ -139,6 +140,7 @@ export const AuditCustomer = (props) => {
             setErrorMessage(err.response.statusText)
         })
     },[])
+    console.log(values)
 
     
     return ( 
@@ -162,7 +164,7 @@ export const AuditSession = (props) => {
               'Authorization': 'JWT ' + authTokens
             }
         }
-        axios.get(`${URL}api/sessions/audit/`, option)
+        axios.get(`${HOST_URL}/api/sessions/audit/`, option)
         .then(res=> {
             var sessions = res.data.results
             var rows = []
@@ -182,10 +184,9 @@ export const AuditSession = (props) => {
                     
                 })
             })
-            
             setValues({
                 ...values,
-                count : res.data.count,
+                count : id,
                 sessions: rows
             })
         })
@@ -195,7 +196,6 @@ export const AuditSession = (props) => {
         })
     },[])
 
-    
     return ( 
             <TableContainer id="pk" type="audit" title="SESSIONS" data={values.sessions.reverse()} columns={session_column} count={values.count} />
     );
@@ -217,9 +217,9 @@ export const AuditUser = (props) => {
               'Authorization': 'JWT ' + authTokens
             }
         }
-        axios.get(`${URL}api/users/audit/`, option)
+        axios.get(`${HOST_URL}/api/users/audit/`, option)
         .then(res=> {
-            
+            console.log(res)
             
             setValues({
                 ...values,
@@ -233,7 +233,7 @@ export const AuditUser = (props) => {
         })
     },[])
 
-    
+    console.log(values)
     return ( 
             <TableContainer type="audit" id="pk" title="Login History" data={values.users} columns={user_column} count={values.count} />
     );

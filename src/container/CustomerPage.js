@@ -1,23 +1,18 @@
 import React, { Component, useState, useEffect} from 'react'
 import { useAuth } from '../components/auth'
 import CustomerDataService from '../services/CustomerDataService'
+import SessionDataService from '../services/SessionDataService'
 import { Link, useHistory } from "react-router-dom";
 
 
-import { Container, Row, Col, Form, Button, Modal, Table} from 'react-bootstrap';
-import { dateFilter,Comparator,customFilter,FILTER_TYPES, CustomFilterProps, Type } from 'react-bootstrap-table2-filter';
+import { Container, Row, Col, Form, Modal, Table} from 'react-bootstrap';
 import InputField from '../reusable/InputField'
 import {ButtonField} from '../reusable/Button/ButtonField'
 import {FormContainer} from '../reusable/FormContainer'
 import TableContainer from '../reusable/TableContainer'
-import {DateRangeFilter} from '../reusable/DateRangeFilter'
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-function getCustomFilter(filterHandler, customFilterParameters) {
-  return (
-    <DateRangeFilter filterHandler={filterHandler} />
-  );
-}
+
 
 const columns = [{
     dataField:"date",
@@ -719,6 +714,7 @@ export const CustomerPage = (props)=>{
     const [customers, setCustomers] = useState([])
     const [data, setData] = useState({})
     const { authTokens } = useAuth()
+    let history = useHistory()
     var options = {
       headers: {
         'Content-Type': 'application/json',
@@ -737,6 +733,13 @@ export const CustomerPage = (props)=>{
           setLoading(false)
           console.log(e);
         });
+        var options = {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'JWT ' + authTokens
+          }
+        }
+      
         return ()=> CustomerDataService.cancelToken()
     },[])
     const handleFilter = (start, end)=> {

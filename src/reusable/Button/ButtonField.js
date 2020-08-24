@@ -38,7 +38,7 @@ export const ButtonIconField = ({buttonStyle,buttonSize,tips, children, style, o
     return (
         <OverlayTrigger
             placement="top"
-            delay={{ show: 250, hide: 300 }}
+            delay={{ show: 250, hide: 2000 }}
             overlay={
                 <Tooltip>
                     {tips}
